@@ -12,7 +12,7 @@ load_dotenv()
 
 def conectar_mongodb():
     cliente = MongoClient(
-        os.getenv("MONGO_URI", "mongodb://localhost:27017"),
+        os.getenv("MONGO_URI", "mongodb://localhost:27018"),
         serverSelectionTimeoutMS=5000
     )
     cliente.admin.command("ping")

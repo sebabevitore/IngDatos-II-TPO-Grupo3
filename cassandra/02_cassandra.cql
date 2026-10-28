@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS tiempos_tramo_por_mes (
 
 -- Consultas de ejemplo: reemplazar IDs y fechas por valores de la carga de prueba.
 -- SELECT * FROM telemetria_por_viaje_dia
--- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-25'
+-- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-25'py -0p
 -- AND fecha_hora >= '2026-10-25T09:00:00Z'
 -- AND fecha_hora < '2026-10-25T10:00:00Z';
 -- SELECT * FROM telemetria_por_vehiculo_dia
