@@ -10,13 +10,31 @@ from neo4j import GraphDatabase
 load_dotenv()
 
 
+
 def conectar_mongodb():
+    usuario = os.getenv("MONGO_USER")
+    contrasena = os.getenv("MONGO_PASSWORD")
+
+    if not usuario or not contrasena:
+        raise RuntimeError(
+            "Faltan MONGO_USER o MONGO_PASSWORD en el archivo .env"
+        )
+
     cliente = MongoClient(
-        os.getenv("MONGO_URI", "mongodb://localhost:27018"),
+        host="localhost",
+        port=27018,
+        username=usuario,
+        password=contrasena,
+        authSource="admin",
         serverSelectionTimeoutMS=5000
     )
-    cliente.admin.command("ping")
-    return cliente
+
+    try:
+        cliente.admin.command("ping")
+        return cliente
+    except Exception:
+        cliente.close()
+        raise
 
 
 def conectar_cassandra():
@@ -47,5 +65,10 @@ def conectar_neo4j():
             os.getenv("NEO4J_PASSWORD", "")
         )
     )
-    driver.verify_connectivity()
-    return driver
+
+    try:
+        driver.verify_connectivity()
+        return driver
+    except Exception:
+        driver.close()
+        raise
