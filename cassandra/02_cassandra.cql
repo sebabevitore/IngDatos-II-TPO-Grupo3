@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS telemetria_por_vehiculo_dia (
   PRIMARY KEY ((vehiculo_patente, dia), fecha_hora, id_evento)
 ) WITH CLUSTERING ORDER BY (fecha_hora ASC, id_evento ASC);
 
--- Registro histórico de alertas para análisis temporal: fuente principal de alertas en MongoDB.
+-- CU-03 y CU-08: Registro histórico de alertas por viaje y día (análisis temporal y trazabilidad).
 CREATE TABLE IF NOT EXISTS alertas_por_viaje_dia (
   viaje_id text,
   dia date,
@@ -43,8 +43,57 @@ CREATE TABLE IF NOT EXISTS alertas_por_viaje_dia (
   vehiculo_patente text,
   tipo text,
   descripcion text,
+  latitud double,
+  longitud double,
+  valor_observado double,
+  umbral double,
+  clave_deduplicacion text,
+  resuelta boolean,
+  fecha_resolucion timestamp,
+  contexto text,
   PRIMARY KEY ((viaje_id, dia), fecha_hora, alerta_id)
 ) WITH CLUSTERING ORDER BY (fecha_hora ASC, alerta_id ASC);
+
+-- CU-03: Histórico de alertas por vehículo y día (inclusive sin viaje activo).
+CREATE TABLE IF NOT EXISTS alertas_por_vehiculo_dia (
+  vehiculo_patente text,
+  dia date,
+  fecha_hora timestamp,
+  alerta_id text,
+  viaje_id text,
+  tipo text,
+  descripcion text,
+  latitud double,
+  longitud double,
+  valor_observado double,
+  umbral double,
+  clave_deduplicacion text,
+  resuelta boolean,
+  fecha_resolucion timestamp,
+  contexto text,
+  PRIMARY KEY ((vehiculo_patente, dia), fecha_hora, alerta_id)
+) WITH CLUSTERING ORDER BY (fecha_hora ASC, alerta_id ASC);
+
+-- CU-03: Espejo durable de anomalías abiertas (fuente de la verdad para reconciliar con Redis).
+CREATE TABLE IF NOT EXISTS alertas_abiertas_por_vehiculo (
+  vehiculo_patente text,
+  tipo text,
+  alerta_id text,
+  viaje_id text,
+  dia date,
+  fecha_hora timestamp,
+  PRIMARY KEY ((vehiculo_patente), tipo)
+);
+
+-- CU-03: Bitácora de pasos completados por operación (requisito obligatorio de la Sección 5).
+CREATE TABLE IF NOT EXISTS alertas_log_pasos (
+  alerta_id text,
+  ts timestamp,
+  paso text,
+  estado text,
+  detalle text,
+  PRIMARY KEY ((alerta_id), ts, paso)
+) WITH default_time_to_live = 604800;
 
 -- Tiempos históricos precalculados por tramo para ETA (CU-04).
 -- Este modelo requiere que la aplicación complete estas filas a partir de viajes concluidos.
@@ -57,10 +106,14 @@ CREATE TABLE IF NOT EXISTS tiempos_tramo_por_mes (
   PRIMARY KEY ((tramo_id, mes), fecha_fin, viaje_id)
 ) WITH CLUSTERING ORDER BY (fecha_fin DESC, viaje_id ASC);
 
--- Consultas de ejemplo: reemplazar IDs y fechas por valores de la carga de prueba.
+-- Consultas de ejemplo:
 -- SELECT * FROM telemetria_por_viaje_dia
--- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-25'py -0p
+-- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-25'
 -- AND fecha_hora >= '2026-10-25T09:00:00Z'
 -- AND fecha_hora < '2026-10-25T10:00:00Z';
 -- SELECT * FROM telemetria_por_vehiculo_dia
 -- WHERE vehiculo_patente = 'AB123CD' AND dia = '2026-10-25';
+-- SELECT * FROM alertas_por_vehiculo_dia
+-- WHERE vehiculo_patente = 'AB123CD' AND dia = '2026-10-25';
+-- SELECT * FROM alertas_abiertas_por_vehiculo
+-- WHERE vehiculo_patente = 'AB123CD';
