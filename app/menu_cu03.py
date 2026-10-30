@@ -3,6 +3,12 @@ Script interactivo y de prueba para el Caso de Uso 3: Detección de anomalías (
 Permite ejecutar y verificar todos los escenarios exigidos por la consigna (Sección 4, 5 y 8).
 """
 
+import os
+import sys
+
+# Permite ejecutar directamente el archivo con el botón de Play del editor
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 import uuid
 from datetime import datetime, timezone
 import json
@@ -132,4 +138,3 @@ def menu():
 
 if __name__ == "__main__":
     menu()
-
