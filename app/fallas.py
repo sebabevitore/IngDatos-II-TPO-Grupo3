@@ -1,5 +1,5 @@
 """
-Módulo para inyección de fallas controladas (CU-03 y CU-05).
+Módulo para inyección de fallas controladas (CU-01, CU-03, CU-05 y CU-06).
 Permite provocar fallas a voluntad en pasos específicos del flujo
 para demostrar la consistencia y el rollback durante la defensa oral (Sección 5 del TPO).
 """
@@ -22,6 +22,12 @@ class InyectorFallas:
         "CU05_NEO4J",          # Falla al validar/vincular la ruta en Neo4j
         "CU05_MONGO",          # Falla al persistir reasignación en MongoDB
         "CU05_REDIS_CONFIRM",  # Falla al consolidar estados en Redis
+
+        # CU-06 (Confirmación de entrega)
+        "CU06_REDIS_LOCK",     # Falla al adquirir lock de entrega en Redis
+        "CU06_CASSANDRA",      # Falla al registrar evento inmutable en Cassandra
+        "CU06_MONGO",          # Falla al actualizar paquete/asignación en MongoDB
+        "CU06_REDIS_CONFIRM",  # Falla al actualizar contadores en Redis
     }
 
     def __init__(self, punto_falla: str = None):

@@ -95,6 +95,22 @@ CREATE TABLE IF NOT EXISTS alertas_log_pasos (
   PRIMARY KEY ((alerta_id), ts, paso)
 ) WITH default_time_to_live = 604800;
 
+-- CU-06: Histórico inmutable de confirmaciones de entrega (Proof of Delivery / Trazabilidad).
+CREATE TABLE IF NOT EXISTS confirmaciones_entrega_por_viaje_dia (
+  viaje_id text,
+  dia date,
+  fecha_hora timestamp,
+  paquete_codigo text,
+  vehiculo_patente text,
+  receptor_nombre text,
+  receptor_dni text,
+  receptor_vinculo text,
+  latitud double,
+  longitud double,
+  id_evento uuid,
+  PRIMARY KEY ((viaje_id, dia), fecha_hora, paquete_codigo)
+) WITH CLUSTERING ORDER BY (fecha_hora ASC, paquete_codigo ASC);
+
 -- Tiempos históricos precalculados por tramo para ETA (CU-04).
 -- Este modelo requiere que la aplicación complete estas filas a partir de viajes concluidos.
 CREATE TABLE IF NOT EXISTS tiempos_tramo_por_mes (
@@ -115,5 +131,5 @@ CREATE TABLE IF NOT EXISTS tiempos_tramo_por_mes (
 -- WHERE vehiculo_patente = 'AB123CD' AND dia = '2026-10-25';
 -- SELECT * FROM alertas_por_vehiculo_dia
 -- WHERE vehiculo_patente = 'AB123CD' AND dia = '2026-10-25';
--- SELECT * FROM alertas_abiertas_por_vehiculo
--- WHERE vehiculo_patente = 'AB123CD';
+-- SELECT * FROM confirmaciones_entrega_por_viaje_dia
+-- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-30';
