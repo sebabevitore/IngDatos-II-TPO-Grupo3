@@ -1,5 +1,5 @@
 """
-Módulo para inyección de fallas controladas (CU-03).
+Módulo para inyección de fallas controladas (CU-03 y CU-05).
 Permite provocar fallas a voluntad en pasos específicos del flujo
 para demostrar la consistencia y el rollback durante la defensa oral (Sección 5 del TPO).
 """
@@ -11,10 +11,17 @@ class FallaSimuladaError(RuntimeError):
 
 class InyectorFallas:
     PUNTOS_FALLA = {
+        # CU-03 (Detección de anomalías)
         "REDIS_CLAIM",         # Falla durante el claim inicial en Redis
         "CASSANDRA_WRITE",     # Falla al persistir la alerta en Cassandra
         "REDIS_CONFIRM",       # Falla al confirmar el estado ACTIVE en Redis
         "NOTIFICACION",        # Falla al emitir la alerta/notificación final
+
+        # CU-05 (Reasignación por avería)
+        "CU05_REDIS_RESERVA",  # Falla al reservar vehículo/chofer en Redis
+        "CU05_NEO4J",          # Falla al validar/vincular la ruta en Neo4j
+        "CU05_MONGO",          # Falla al persistir reasignación en MongoDB
+        "CU05_REDIS_CONFIRM",  # Falla al consolidar estados en Redis
     }
 
     def __init__(self, punto_falla: str = None):
@@ -34,4 +41,3 @@ class InyectorFallas:
             raise FallaSimuladaError(
                 f"[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: '{punto_actual}'"
             )
-
