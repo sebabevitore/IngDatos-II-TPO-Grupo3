@@ -1,17 +1,18 @@
-
 from datetime import datetime, timezone
 from uuid import uuid4
 
 
-def registrar_viaje(coleccion, datos, id_operacion=None):
+def registrar_viaje(coleccion, datos, id_operacion=None, id_viaje=None):
     """
     Registra un viaje en MongoDB.
 
     El parametro coleccion permite utilizar
     MongoDB real o una coleccion simulada.
+    Permite recibir un id_viaje pregenerado para compartirlo
+    con Neo4j garantizando el identificador común.
     """
 
-    id_viaje = str(uuid4())
+    id_viaje = id_viaje or str(uuid4())
 
     documento = {
         "_id": id_viaje,

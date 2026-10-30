@@ -1,4 +1,10 @@
 
+import os
+import sys
+
+# Permite ejecutar directamente el archivo con el botón de Play del editor
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from concurrent.futures import ThreadPoolExecutor
 from uuid import uuid4
 
