@@ -4,11 +4,13 @@ import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from app.conexiones import conectar_neo4j
+from app.conexiones import conectar_neo4j, conectar_redis
 from app.rutas_alternativas import consultar_impacto_y_alternativa
 
+
 def preparar_datos_prueba():
-    """Genera un sub-grafo idempotente (MERGE) para probar el desvío sin fallas."""
+    """Genera datos de prueba en Neo4j y Redis para probar desvío y detección de flota activa."""
+    # 1. Topología en Neo4j
     driver = conectar_neo4j()
     cypher = """
     // Nodos
@@ -34,27 +36,59 @@ def preparar_datos_prueba():
     with driver.session() as sesion:
         sesion.run(cypher)
     driver.close()
-    print("[OK] Red de prueba inicializada en Neo4j.")
+    print("[OK] Red topológica de prueba inicializada en Neo4j.")
+
+    # 2. Estado del vehículo en vivo en Redis
+    cliente_redis = conectar_redis()
+    try:
+        cliente_redis.hset("vehiculo:AA111AA:estado", mapping={
+            "viaje_id": "VIAJE-999",
+            "latitud": "-34.6010",
+            "longitud": "-58.4010",
+            "velocidad": "45.0",
+            "estado": "EN_RUTA",
+            "fecha_hora_ms": "1730480000000"
+        })
+        print("[OK] Telemetría en vivo registrada en Redis (vehiculo:AA111AA:estado -> VIAJE-999).")
+    finally:
+        cliente_redis.close()
+
 
 def demo_desvio_exitoso():
-    print("\n--- 1. ESCENARIO: Camino alternativo exitoso ---")
+    print("\n--- 1. ESCENARIO: Camino alternativo exitoso y detección de flota en peligro ---")
     print("El vehículo va de NODO-A a NODO-C, pero bloqueamos NODO-B por un piquete.")
     resultado = consultar_impacto_y_alternativa("NODO-A", "NODO-C", "NODO-B")
     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
+
 def demo_sin_salida():
-    print("\n--- 2. ESCENARIO: Sin ruta alternativa posible ---")
-    print("Bloqueamos el NODO-D. Como no hay otra conexión, no se encontrará ruta.")
+    print("\n--- 2. ESCENARIO: Sin ruta alternativa posible (red aislada) ---")
+    print("Bloqueamos el NODO-D. Como no hay otra conexión transitable, no se encontrará ruta.")
     resultado = consultar_impacto_y_alternativa("NODO-A", "NODO-C", "NODO-D")
     print(json.dumps(resultado, indent=2, ensure_ascii=False))
 
+
 def menu():
     preparar_datos_prueba()
+
+    if len(sys.argv) > 1:
+        arg = sys.argv[1].lower()
+        if arg in ["--all", "-a", "all"]:
+            demo_desvio_exitoso()
+            demo_sin_salida()
+            return
+        elif arg in ["1", "--demo1"]:
+            demo_desvio_exitoso()
+            return
+        elif arg in ["2", "--demo2"]:
+            demo_sin_salida()
+            return
+
     while True:
         print("\n=============================================================")
-        print("   TPO - CU-07: Rutas Alternativas y Bloqueos (Neo4j)")
+        print("   TPO - CU-07: Rutas Alternativas y Bloqueos (Neo4j + Redis)")
         print("=============================================================")
-        print("1. Encontrar camino alternativo por bloqueo")
+        print("1. Encontrar camino alternativo por bloqueo y alertar vehículos")
         print("2. Demostrar falla cuando no hay conexión disponible")
         print("3. Salir")
         opc = input("\nSeleccione (1-3): ").strip()
@@ -68,6 +102,7 @@ def menu():
             break
         else:
             print("Opción inválida.")
+
 
 if __name__ == "__main__":
     menu()
