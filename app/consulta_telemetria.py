@@ -39,3 +39,41 @@ def consultar_estado_actual(vehiculo_patente):
     finally:
         if cliente_redis is not None:
             cliente_redis.close()
+
+
+def consultar_estado_actual_por_viaje(viaje_id):
+    """
+    Busca en Redis cuál es el vehículo que tiene este viaje activo
+    y devuelve su estado actual. Redis no tiene índices secundarios,
+    así que recorremos las claves de estado con SCAN (no bloqueante).
+    """
+    if not isinstance(viaje_id, str) or not viaje_id.strip():
+        return False, "El viaje_id es obligatorio"
+
+    cliente_redis = None
+    try:
+        cliente_redis = conectar_redis()
+
+        for clave in cliente_redis.scan_iter(match="vehiculo:*:estado"):
+            estado = cliente_redis.hgetall(clave)
+            if estado.get("viaje_id") == viaje_id:
+                patente = clave.split(":")[1]
+                return True, {
+                    "vehiculo_patente": patente,
+                    "fecha_hora_ms": int(estado["fecha_hora_ms"]),
+                    "viaje_id": estado.get("viaje_id") or None,
+                    "latitud": float(estado["latitud"]),
+                    "longitud": float(estado["longitud"]),
+                    "velocidad": float(estado["velocidad"]),
+                    "estado_vehiculo": estado["estado"],
+                }
+
+        return False, f"No hay ningún vehículo con estado actual para el viaje {viaje_id}"
+
+    except Exception as error:
+        return False, f"Error al consultar el estado actual por viaje: {error}"
+
+    finally:
+        if cliente_redis is not None:
+            cliente_redis.close()
+            

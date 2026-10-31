@@ -122,6 +122,15 @@ CREATE TABLE IF NOT EXISTS tiempos_tramo_por_mes (
   PRIMARY KEY ((tramo_id, mes), fecha_fin, viaje_id)
 ) WITH CLUSTERING ORDER BY (fecha_fin DESC, viaje_id ASC);
 
+CREATE TABLE IF NOT EXISTS logistica_flota.tiempos_tramo_historico (
+  tramo_id text,
+  fecha_hora timestamp,
+  viaje_id text,
+  duracion_minutos double,
+  PRIMARY KEY (tramo_id, fecha_hora)
+) WITH CLUSTERING ORDER BY (fecha_hora DESC);
+
+
 -- Consultas de ejemplo:
 -- SELECT * FROM telemetria_por_viaje_dia
 -- WHERE viaje_id = 'VIAJE-1001' AND dia = '2026-10-25'
