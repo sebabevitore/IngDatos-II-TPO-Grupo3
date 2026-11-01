@@ -1,0 +1,359 @@
+{
+  "id_simulacion": "65aafab3-0175-47e5-9942-02150f14d19c",
+  "vehiculos": 50,
+  "mediciones_por_vehiculo": 5,
+  "intervalo": 2.0,
+  "participantes": [
+    {
+      "vehiculo_patente": "SEED26-VEH-00000",
+      "viaje_id": "SEED26-VIA-00400",
+      "latitud": -34.6,
+      "longitud": -58.476,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00001",
+      "viaje_id": "SEED26-VIA-00401",
+      "latitud": -34.6,
+      "longitud": -58.466,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00002",
+      "viaje_id": "SEED26-VIA-00402",
+      "latitud": -34.6,
+      "longitud": -58.456,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00003",
+      "viaje_id": "SEED26-VIA-00403",
+      "latitud": -34.6,
+      "longitud": -58.446,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00004",
+      "viaje_id": "SEED26-VIA-00404",
+      "latitud": -34.6,
+      "longitud": -58.436,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00005",
+      "viaje_id": "SEED26-VIA-00405",
+      "latitud": -34.575,
+      "longitud": -58.476,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00006",
+      "viaje_id": "SEED26-VIA-00406",
+      "latitud": -34.575,
+      "longitud": -58.466,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00007",
+      "viaje_id": "SEED26-VIA-00407",
+      "latitud": -34.575,
+      "longitud": -58.456,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00008",
+      "viaje_id": "SEED26-VIA-00408",
+      "latitud": -34.575,
+      "longitud": -58.446,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00009",
+      "viaje_id": "SEED26-VIA-00409",
+      "latitud": -34.575,
+      "longitud": -58.436,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00010",
+      "viaje_id": "SEED26-VIA-00410",
+      "latitud": -34.550000000000004,
+      "longitud": -58.476,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00011",
+      "viaje_id": "SEED26-VIA-00411",
+      "latitud": -34.550000000000004,
+      "longitud": -58.466,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00012",
+      "viaje_id": "SEED26-VIA-00412",
+      "latitud": -34.550000000000004,
+      "longitud": -58.456,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00013",
+      "viaje_id": "SEED26-VIA-00413",
+      "latitud": -34.550000000000004,
+      "longitud": -58.446,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00014",
+      "viaje_id": "SEED26-VIA-00414",
+      "latitud": -34.550000000000004,
+      "longitud": -58.436,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00015",
+      "viaje_id": "SEED26-VIA-00415",
+      "latitud": -34.525,
+      "longitud": -58.476,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00016",
+      "viaje_id": "SEED26-VIA-00416",
+      "latitud": -34.525,
+      "longitud": -58.466,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00017",
+      "viaje_id": "SEED26-VIA-00417",
+      "latitud": -34.525,
+      "longitud": -58.456,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00018",
+      "viaje_id": "SEED26-VIA-00418",
+      "latitud": -34.525,
+      "longitud": -58.446,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00019",
+      "viaje_id": "SEED26-VIA-00419",
+      "latitud": -34.525,
+      "longitud": -58.436,
+      "ultimo_ms": 1793347695000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00020",
+      "viaje_id": "SEED26-VIA-00420",
+      "latitud": -34.5,
+      "longitud": -58.476,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00021",
+      "viaje_id": "SEED26-VIA-00421",
+      "latitud": -34.5,
+      "longitud": -58.466,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00022",
+      "viaje_id": "SEED26-VIA-00422",
+      "latitud": -34.5,
+      "longitud": -58.456,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00023",
+      "viaje_id": "SEED26-VIA-00423",
+      "latitud": -34.5,
+      "longitud": -58.446,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00024",
+      "viaje_id": "SEED26-VIA-00424",
+      "latitud": -34.5,
+      "longitud": -58.436,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00025",
+      "viaje_id": "SEED26-VIA-00425",
+      "latitud": -34.6,
+      "longitud": -58.476,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00026",
+      "viaje_id": "SEED26-VIA-00426",
+      "latitud": -34.6,
+      "longitud": -58.466,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00027",
+      "viaje_id": "SEED26-VIA-00427",
+      "latitud": -34.6,
+      "longitud": -58.456,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00028",
+      "viaje_id": "SEED26-VIA-00428",
+      "latitud": -34.6,
+      "longitud": -58.446,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00029",
+      "viaje_id": "SEED26-VIA-00429",
+      "latitud": -34.6,
+      "longitud": -58.436,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00030",
+      "viaje_id": "SEED26-VIA-00430",
+      "latitud": -34.575,
+      "longitud": -58.476,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00031",
+      "viaje_id": "SEED26-VIA-00431",
+      "latitud": -34.575,
+      "longitud": -58.466,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00032",
+      "viaje_id": "SEED26-VIA-00432",
+      "latitud": -34.575,
+      "longitud": -58.456,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00033",
+      "viaje_id": "SEED26-VIA-00433",
+      "latitud": -34.575,
+      "longitud": -58.446,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00034",
+      "viaje_id": "SEED26-VIA-00434",
+      "latitud": -34.575,
+      "longitud": -58.436,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00035",
+      "viaje_id": "SEED26-VIA-00435",
+      "latitud": -34.550000000000004,
+      "longitud": -58.476,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00036",
+      "viaje_id": "SEED26-VIA-00436",
+      "latitud": -34.550000000000004,
+      "longitud": -58.466,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00037",
+      "viaje_id": "SEED26-VIA-00437",
+      "latitud": -34.550000000000004,
+      "longitud": -58.456,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00038",
+      "viaje_id": "SEED26-VIA-00438",
+      "latitud": -34.550000000000004,
+      "longitud": -58.446,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00039",
+      "viaje_id": "SEED26-VIA-00439",
+      "latitud": -34.550000000000004,
+      "longitud": -58.436,
+      "ultimo_ms": 1793351295000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00040",
+      "viaje_id": "SEED26-VIA-00440",
+      "latitud": -34.525,
+      "longitud": -58.476,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00041",
+      "viaje_id": "SEED26-VIA-00441",
+      "latitud": -34.525,
+      "longitud": -58.466,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00042",
+      "viaje_id": "SEED26-VIA-00442",
+      "latitud": -34.525,
+      "longitud": -58.456,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00043",
+      "viaje_id": "SEED26-VIA-00443",
+      "latitud": -34.525,
+      "longitud": -58.446,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00044",
+      "viaje_id": "SEED26-VIA-00444",
+      "latitud": -34.525,
+      "longitud": -58.436,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00045",
+      "viaje_id": "SEED26-VIA-00445",
+      "latitud": -34.5,
+      "longitud": -58.476,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00046",
+      "viaje_id": "SEED26-VIA-00446",
+      "latitud": -34.5,
+      "longitud": -58.466,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00047",
+      "viaje_id": "SEED26-VIA-00447",
+      "latitud": -34.5,
+      "longitud": -58.456,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00048",
+      "viaje_id": "SEED26-VIA-00448",
+      "latitud": -34.5,
+      "longitud": -58.446,
+      "ultimo_ms": 1793354895000
+    },
+    {
+      "vehiculo_patente": "SEED26-VEH-00049",
+      "viaje_id": "SEED26-VIA-00449",
+      "latitud": -34.5,
+      "longitud": -58.436,
+      "ultimo_ms": 1793354895000
+    }
+  ],
+  "fecha_inicio_utc": "2026-11-01T22:37:53.471862+00:00"
+}
