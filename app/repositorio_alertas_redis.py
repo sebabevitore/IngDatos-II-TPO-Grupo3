@@ -10,7 +10,9 @@ _SHA_LIBERAR: Optional[str] = None
 def _obtener_sha_claim(cliente: redis.Redis) -> str:
     global _SHA_CLAIM
     if _SHA_CLAIM is None or not cliente.script_exists(_SHA_CLAIM)[0]:
-        ruta = os.path.join("redis", "07_claim_alerta.lua")
+        ruta = os.path.join(os.path.dirname(__file__), "..", "redis", "07_claim_alerta.lua")
+        if not os.path.isfile(ruta):
+            ruta = os.path.join("redis", "07_claim_alerta.lua")
         with open(ruta, "r", encoding="utf-8") as f:
             script = f.read()
         _SHA_CLAIM = cliente.script_load(script)
@@ -20,7 +22,9 @@ def _obtener_sha_claim(cliente: redis.Redis) -> str:
 def _obtener_sha_liberar(cliente: redis.Redis) -> str:
     global _SHA_LIBERAR
     if _SHA_LIBERAR is None or not cliente.script_exists(_SHA_LIBERAR)[0]:
-        ruta = os.path.join("redis", "08_liberar_alerta.lua")
+        ruta = os.path.join(os.path.dirname(__file__), "..", "redis", "08_liberar_alerta.lua")
+        if not os.path.isfile(ruta):
+            ruta = os.path.join("redis", "08_liberar_alerta.lua")
         with open(ruta, "r", encoding="utf-8") as f:
             script = f.read()
         _SHA_LIBERAR = cliente.script_load(script)

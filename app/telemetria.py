@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from uuid import UUID
 
@@ -183,7 +184,11 @@ def registrar_telemetria(datos):
             cliente_redis = conectar_redis()
 
             with open(
-                "redis/06_update_if_newer.lua",
+                (
+                    os.path.join(os.path.dirname(__file__), "..", "redis", "06_update_if_newer.lua")
+                    if os.path.isfile(os.path.join(os.path.dirname(__file__), "..", "redis", "06_update_if_newer.lua"))
+                    else "redis/06_update_if_newer.lua"
+                ),
                 encoding="utf-8"
             ) as archivo:
                 script = archivo.read()

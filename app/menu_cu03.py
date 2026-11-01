@@ -107,6 +107,15 @@ def demo_reconstruir_redis_desde_cero():
 
 
 def menu():
+    if len(sys.argv) > 1:
+        arg = sys.argv[1].lower()
+        if arg in ["--all", "-a", "all"]:
+            demo_camino_feliz_exceso_velocidad()
+            demo_anomalia_sostenida()
+            demo_falla_cassandra_y_rollback()
+            demo_falla_redis_y_reconciliacion()
+            demo_reconstruir_redis_desde_cero()
+            return
     while True:
         print("\n==================================================")
         print("   TPO - CU-03: Detección de anomalías (Cassandra + Redis)")

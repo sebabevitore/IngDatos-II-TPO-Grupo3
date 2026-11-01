@@ -189,6 +189,15 @@ def demo_falla_mongo_y_rollback():
 
 
 def menu():
+    if len(sys.argv) > 1:
+        arg = sys.argv[1].lower()
+        if arg in ["--all", "-a", "all"]:
+            demo_camino_feliz()
+            demo_concurrencia()
+            demo_falla_neo4j_y_rollback()
+            demo_falla_mongo_y_rollback()
+            return
+
     while True:
         print("\n=============================================================")
         print("   TPO - CU-05: Reasignación por avería (MongoDB + Redis + Neo4j)")

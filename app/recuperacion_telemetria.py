@@ -1,4 +1,5 @@
 
+import os
 from datetime import datetime, timezone
 
 from app.conexiones import conectar_redis
@@ -150,7 +151,11 @@ def reintentar_redis(coleccion, id_evento):
         # 5. Cargar el script que actualiza solo si la medición
         # es más reciente que el estado actual.
         with open(
-            "redis/06_update_if_newer.lua",
+            (
+                os.path.join(os.path.dirname(__file__), "..", "redis", "06_update_if_newer.lua")
+                if os.path.isfile(os.path.join(os.path.dirname(__file__), "..", "redis", "06_update_if_newer.lua"))
+                else "redis/06_update_if_newer.lua"
+            ),
             encoding="utf-8"
         ) as archivo:
             script = archivo.read()

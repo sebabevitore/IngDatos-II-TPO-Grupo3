@@ -7,6 +7,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from app.telemetria import registrar_telemetria
 from app.eta import calcular_eta_y_desvio
+from app.conexiones import conectar_neo4j
+from app.probar_eta_neo4j import cargar_datos_de_prueba
 
 VIAJE_ID = "VIAJE-PRUEBA-ETA"
 PATENTE = "AA111AA"
@@ -48,6 +50,18 @@ def demo_sin_historico():
 
 
 def menu():
+    driver = conectar_neo4j()
+    try:
+        cargar_datos_de_prueba(driver)
+    finally:
+        driver.close()
+    if len(sys.argv) > 1:
+        arg = sys.argv[1].lower()
+        if arg in ["--all", "-a", "all"]:
+            demo_sin_desvio()
+            demo_con_desvio()
+            demo_sin_historico()
+            return
     while True:
         print("\n=============================================================")
         print("   TPO - CU-04: ETA y desvíos (Redis + Neo4j + Cassandra)")
