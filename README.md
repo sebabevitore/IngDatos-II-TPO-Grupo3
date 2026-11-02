@@ -75,7 +75,7 @@ python -m app.menu_cu05 6  # falla en transferencia parcial
 python -m app.menu_cu06 5  # falla Redis final
 ```
 
-Antes de entregar, actualizar el informe técnico con el comportamiento y las evidencias de esta rama; el informe previo describía la versión anterior.
+El informe técnico actualizado describe el comportamiento y la evidencia de esta versión; ver `docs/INFORME_TECNICO_ACTUALIZADO.md`.
 
 ### Validar el seed después de una simulación
 
@@ -86,3 +86,19 @@ python -m app.verificar_seed_historico
 ```
 
 Este comando comprueba MongoDB, Cassandra y Neo4j contra el manifiesto y excluye explícitamente Redis de esa comparación. El estado Redis actualizado se comprueba en la evidencia de la simulación de flota. Ver `docs/IMPLEMENTACION_Y_VALIDACION.md` para secuencias, alcance y evidencia.
+
+
+## Organización de la entrega
+
+- `app/`: aplicación, menús y demostraciones reproducibles de los ocho casos.
+- `tests/`: pruebas de reglas, integración y recuperación tras caídas.
+- `mongodb/`, `cassandra/`, `neo4j/` y `redis/`: esquemas y scripts de los motores.
+- `seed_resultados/`: manifiesto y resultado de la carga inicial.
+- `evidencias/validacion-entrega/`: una ejecución completa con logs y huellas del código.
+- `evidencias/correcciones/`: 17 comprobaciones específicas de fallas y correcciones.
+- `evidencias/cu08.log` y `evidencias/seed-historico.json`: trazabilidad y carga histórica.
+- `evidencias/validacion-seed/`: diagnóstico documentado de la diferencia del snapshot Redis tras GPS nuevo.
+- `resultados_menus/`: una tanda de 27 escenarios aprobados y una simulación de 50 vehículos.
+- `docs/`: informe técnico y detalle de implementación y validación.
+
+Las demos son parte de la aplicación y de la defensa; sus resultados son evidencia, no datos que la aplicación necesite leer para funcionar. Las nuevas ejecuciones siguen guardando sus resultados localmente. `.gitignore` evita incorporar automáticamente nuevas tandas, simulaciones, archivos `ultimo_CU*`, exportaciones Repomix y archivos del sistema. La evidencia seleccionada que ya está versionada se conserva; para publicar una ejecución adicional se debe agregar explícitamente con `git add -f ruta`.
