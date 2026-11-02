@@ -38,8 +38,9 @@ def menu():
             ),
             ("Falla Cassandra y compensación", demo_falla_cassandra_y_rollback),
             ("Falla MongoDB y compensación", demo_falla_mongo_y_rollback),
+            ("Falla Redis final y compensación", lambda: escenarios.cu06(5)),
         ],
-        5,
+        6,
     )
 
 

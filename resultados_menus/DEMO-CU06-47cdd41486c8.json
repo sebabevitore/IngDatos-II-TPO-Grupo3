@@ -1,0 +1,60 @@
+{
+  "caso": "CU06",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU06-47cdd41486c8",
+    "ruta": "DEMO-CU06-47cdd41486c8-RUT-0",
+    "viaje": "DEMO-CU06-47cdd41486c8-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-47cdd41486c8-VEH-0",
+      "DEMO-CU06-47cdd41486c8-VEH-1",
+      "DEMO-CU06-47cdd41486c8-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-47cdd41486c8-COND-0",
+      "DEMO-CU06-47cdd41486c8-COND-1",
+      "DEMO-CU06-47cdd41486c8-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-47cdd41486c8-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-47cdd41486c8-P-0",
+      "DEMO-CU06-47cdd41486c8-P-1",
+      "DEMO-CU06-47cdd41486c8-P-2",
+      "DEMO-CU06-47cdd41486c8-P-3"
+    ],
+    "tramo": "DEMO-CU06-47cdd41486c8-T0-1-0"
+  },
+  "resultado": [
+    {
+      "exito": false,
+      "saga_id": "ENTREGA-abeeda55ddbdaab0189afbad6e99edcb",
+      "id_operacion": "ENTREGA-abeeda55ddbdaab0189afbad6e99edcb",
+      "estado": "PROCESANDO",
+      "duplicada": true,
+      "error": "Solicitud ya registrada; consultar resultado o ejecutar recuperación"
+    },
+    {
+      "exito": true,
+      "saga_id": "ENTREGA-abeeda55ddbdaab0189afbad6e99edcb",
+      "viaje_id": "DEMO-CU06-47cdd41486c8-VIA-0",
+      "paquete_codigo": "DEMO-CU06-47cdd41486c8-PAQ-0",
+      "receptor": "Receptor de demostración",
+      "id_evento_cassandra": "40a21810-32a8-5221-93a8-04e4fae07982",
+      "pasos_completados": [
+        "CU06_REDIS_LOCK",
+        "CU06_CASSANDRA",
+        "CU06_MONGO",
+        "CU06_REDIS_CONFIRM"
+      ]
+    }
+  ],
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}

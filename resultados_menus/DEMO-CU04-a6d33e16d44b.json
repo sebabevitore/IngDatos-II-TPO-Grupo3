@@ -1,0 +1,52 @@
+{
+  "caso": "CU04",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU04-a6d33e16d44b",
+    "ruta": "DEMO-CU04-a6d33e16d44b-RUT-0",
+    "viaje": "DEMO-CU04-a6d33e16d44b-VIA-0",
+    "vehiculos": [
+      "DEMO-CU04-a6d33e16d44b-VEH-0",
+      "DEMO-CU04-a6d33e16d44b-VEH-1",
+      "DEMO-CU04-a6d33e16d44b-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU04-a6d33e16d44b-COND-0",
+      "DEMO-CU04-a6d33e16d44b-COND-1",
+      "DEMO-CU04-a6d33e16d44b-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU04-a6d33e16d44b-PAQ-0",
+      "DEMO-CU04-a6d33e16d44b-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU04-a6d33e16d44b-P-0",
+      "DEMO-CU04-a6d33e16d44b-P-1",
+      "DEMO-CU04-a6d33e16d44b-P-2",
+      "DEMO-CU04-a6d33e16d44b-P-3"
+    ],
+    "tramo": "DEMO-CU04-a6d33e16d44b-T0-1-0"
+  },
+  "resultado": {
+    "ok": true,
+    "viaje_id": "DEMO-CU04-a6d33e16d44b-VIA-0",
+    "punto_actual": "DEMO-CU04-a6d33e16d44b-P-0",
+    "proximo_punto": "DEMO-CU04-a6d33e16d44b-P-1",
+    "tramo_id": "DEMO-CU04-a6d33e16d44b-T0-1-0",
+    "eta_minutos": 9.7,
+    "fuente_eta": "historico",
+    "llegada_estimada": "2026-11-02T23:30:13.143160+00:00",
+    "hora_planificada": "2026-11-02T23:30:31.471000+00:00",
+    "demora_estimada_min": 0,
+    "fraccion_tramo": 0.0635,
+    "velocidad_actual_kmh": 40.0,
+    "desviado": false,
+    "distancia_al_recorrido_km": 0.048
+  },
+  "verificaciones": [
+    "Redis y recorrido propios",
+    "Histórico real o fallback comprobado",
+    "Desvío verificado"
+  ],
+  "verificado": true
+}

@@ -1,0 +1,92 @@
+{
+  "caso": "CU03",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU03-d871c48db888",
+    "ruta": "DEMO-CU03-d871c48db888-RUT-0",
+    "viaje": "DEMO-CU03-d871c48db888-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-d871c48db888-VEH-0",
+      "DEMO-CU03-d871c48db888-VEH-1",
+      "DEMO-CU03-d871c48db888-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-d871c48db888-COND-0",
+      "DEMO-CU03-d871c48db888-COND-1",
+      "DEMO-CU03-d871c48db888-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-d871c48db888-PAQ-0",
+      "DEMO-CU03-d871c48db888-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-d871c48db888-P-0",
+      "DEMO-CU03-d871c48db888-P-1",
+      "DEMO-CU03-d871c48db888-P-2",
+      "DEMO-CU03-d871c48db888-P-3"
+    ],
+    "tramo": "DEMO-CU03-d871c48db888-T0-1-0"
+  },
+  "resultado": [
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "8af0b40d7e7f076d",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "8af0b40d7e7f076d",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "8af0b40d7e7f076d",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "8af0b40d7e7f076d",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "8af0b40d7e7f076d",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    }
+  ],
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}

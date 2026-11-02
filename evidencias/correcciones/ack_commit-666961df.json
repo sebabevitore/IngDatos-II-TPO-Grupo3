@@ -1,0 +1,42 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-ACK_COMMIT-373e7fda0ea6",
+    "ruta": "DEMO-ACK_COMMIT-373e7fda0ea6-RUT-0",
+    "viaje": "DEMO-ACK_COMMIT-373e7fda0ea6-VIA-0",
+    "vehiculos": [
+      "DEMO-ACK_COMMIT-373e7fda0ea6-VEH-0",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-VEH-1",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-ACK_COMMIT-373e7fda0ea6-COND-0",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-COND-1",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-ACK_COMMIT-373e7fda0ea6-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-ACK_COMMIT-373e7fda0ea6-P-0",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-P-1",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-P-2",
+      "DEMO-ACK_COMMIT-373e7fda0ea6-P-3"
+    ],
+    "tramo": "DEMO-ACK_COMMIT-373e7fda0ea6-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "saga_id": "ENTREGA-7937c02d38b269474e20cd51181c51b0",
+    "viaje_id": "DEMO-ACK_COMMIT-373e7fda0ea6-VIA-0",
+    "paquete_codigo": "DEMO-ACK_COMMIT-373e7fda0ea6-PAQ-0",
+    "receptor": "Receptor prueba",
+    "id_evento_cassandra": "6d2ae24c-fea2-535d-8042-b75b818e644b",
+    "pasos_completados": [
+      "CU06_REDIS_LOCK",
+      "CU06_CASSANDRA",
+      "CU06_MONGO",
+      "CU06_REDIS_CONFIRM"
+    ]
+  },
+  "verificado": true
+}

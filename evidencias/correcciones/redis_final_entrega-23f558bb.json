@@ -1,0 +1,42 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-FINAL06-77c2e133702f",
+    "ruta": "DEMO-FINAL06-77c2e133702f-RUT-0",
+    "viaje": "DEMO-FINAL06-77c2e133702f-VIA-0",
+    "vehiculos": [
+      "DEMO-FINAL06-77c2e133702f-VEH-0",
+      "DEMO-FINAL06-77c2e133702f-VEH-1",
+      "DEMO-FINAL06-77c2e133702f-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-FINAL06-77c2e133702f-COND-0",
+      "DEMO-FINAL06-77c2e133702f-COND-1",
+      "DEMO-FINAL06-77c2e133702f-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-FINAL06-77c2e133702f-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-FINAL06-77c2e133702f-P-0",
+      "DEMO-FINAL06-77c2e133702f-P-1",
+      "DEMO-FINAL06-77c2e133702f-P-2",
+      "DEMO-FINAL06-77c2e133702f-P-3"
+    ],
+    "tramo": "DEMO-FINAL06-77c2e133702f-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-f456ff831bb108cf104f1809702cf55e",
+    "id_operacion": "ENTREGA-f456ff831bb108cf104f1809702cf55e",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_REDIS_CONFIRM'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "comprobantes": 0,
+  "progreso": {
+    "entregas_completadas": "0",
+    "entregas_pendientes": "1"
+  },
+  "verificado": true
+}

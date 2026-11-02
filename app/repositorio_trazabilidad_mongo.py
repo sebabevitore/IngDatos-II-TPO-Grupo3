@@ -6,6 +6,16 @@ def consultar_trazabilidad_mongo(cliente_mongo, codigo_seguimiento):
 
     db = cliente_mongo["logistica_flota"]
 
+    from app.operaciones import operacion_pendiente
+
+    if operacion_pendiente(db, [f"paquete:{codigo_seguimiento}"]):
+        return dict(
+            paquete={},
+            viajes=[],
+            asignaciones=[],
+            inconsistencias=["Paquete con operación pendiente; ejecutar recuperación"],
+        )
+
     paquete = db.paquetes.find_one(
         {
             "$or": [
@@ -53,6 +63,16 @@ def consultar_trazabilidad_mongo(cliente_mongo, codigo_seguimiento):
                 }
             )
 
+    actual = db.paquetes.find_one({"_id": paquete["_id"]}) or {}
+    recursos = [f"paquete:{codigo_seguimiento}"] + [
+        f"viaje:{v['id_viaje']}" for v in viajes
+    ]
+    if operacion_pendiente(db, recursos) or actual.get(
+        "ultima_operacion"
+    ) != paquete.get("ultima_operacion"):
+        inconsistencias.append(
+            "Los datos cambiaron durante la consulta; reintentar tras recuperar las operaciones"
+        )
     return {
         "codigo_seguimiento": codigo_seguimiento,
         "paquete": paquete,

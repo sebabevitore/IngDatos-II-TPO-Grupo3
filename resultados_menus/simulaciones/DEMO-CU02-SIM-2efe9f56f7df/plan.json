@@ -1,0 +1,359 @@
+{
+  "id_simulacion": "ed5f3330-7b76-4746-81a4-f798ccde17c0",
+  "vehiculos": 50,
+  "mediciones_por_vehiculo": 5,
+  "intervalo": 2.0,
+  "participantes": [
+    {
+      "vehiculo_patente": "DEMO-ACK_ALERTA-75f5080980b1-VEH-0",
+      "viaje_id": "DEMO-ACK_ALERTA-75f5080980b1-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793662032692
+    },
+    {
+      "vehiculo_patente": "DEMO-ACK_COMMIT-14d23d9d6dd1-VEH-0",
+      "viaje_id": "DEMO-ACK_COMMIT-14d23d9d6dd1-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39854167250712,
+      "ultimo_ms": 1793661939149
+    },
+    {
+      "vehiculo_patente": "DEMO-ACK_COMMIT-373e7fda0ea6-VEH-0",
+      "viaje_id": "DEMO-ACK_COMMIT-373e7fda0ea6-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.399246582479805,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-ACK_COMMIT-7086edae16c1-VEH-0",
+      "viaje_id": "DEMO-ACK_COMMIT-7086edae16c1-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661912879
+    },
+    {
+      "vehiculo_patente": "DEMO-ALERTA_PARCIAL-179445460620-VEH-0",
+      "viaje_id": "DEMO-ALERTA_PARCIAL-179445460620-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.40022223779307,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-ALERTA_PARCIAL-1c48843f5413-VEH-0",
+      "viaje_id": "DEMO-ALERTA_PARCIAL-1c48843f5413-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793662032965
+    },
+    {
+      "vehiculo_patente": "DEMO-ALERTA_PARCIAL-8a29af5cc255-VEH-0",
+      "viaje_id": "DEMO-ALERTA_PARCIAL-8a29af5cc255-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.399444453399695,
+      "ultimo_ms": 1793661939149
+    },
+    {
+      "vehiculo_patente": "DEMO-ALERTA_PARCIAL-8db7ef8f5ae1-VEH-0",
+      "viaje_id": "DEMO-ALERTA_PARCIAL-8db7ef8f5ae1-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.399395716976215,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-1967e4ee37a5-VEH-0",
+      "viaje_id": "DEMO-CAIDA-1967e4ee37a5-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39834738477883,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-2d7e33e1614c-VEH-0",
+      "viaje_id": "DEMO-CAIDA-2d7e33e1614c-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.399125076152586,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-3b1c63faddea-VEH-0",
+      "viaje_id": "DEMO-CAIDA-3b1c63faddea-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39827420175541,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-45a143efd583-VEH-0",
+      "viaje_id": "DEMO-CAIDA-45a143efd583-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.399076420467566,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-4859a8637328-VEH-0",
+      "viaje_id": "DEMO-CAIDA-4859a8637328-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661913821
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-493ea71a9f0f-VEH-0",
+      "viaje_id": "DEMO-CAIDA-493ea71a9f0f-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.398202574528085,
+      "ultimo_ms": 1793661939144
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-5154e146e335-VEH-0",
+      "viaje_id": "DEMO-CAIDA-5154e146e335-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39902768844121,
+      "ultimo_ms": 1793661939149
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-8568d04323b0-VEH-0",
+      "viaje_id": "DEMO-CAIDA-8568d04323b0-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.399003441067634,
+      "ultimo_ms": 1793661939149
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-a66a55494fa7-VEH-0",
+      "viaje_id": "DEMO-CAIDA-a66a55494fa7-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661914676
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-c07d9301d31b-VEH-0",
+      "viaje_id": "DEMO-CAIDA-c07d9301d31b-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.398104067226186,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-c0bb454005b9-VEH-0",
+      "viaje_id": "DEMO-CAIDA-c0bb454005b9-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39805599493877,
+      "ultimo_ms": 1793661939145
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-d7c8f08a127a-VEH-0",
+      "viaje_id": "DEMO-CAIDA-d7c8f08a127a-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661913227
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-d85d2f12eb4e-VEH-0",
+      "viaje_id": "DEMO-CAIDA-d85d2f12eb4e-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661914379
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-e16a089ba803-VEH-0",
+      "viaje_id": "DEMO-CAIDA-e16a089ba803-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661913527
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-eab408b4e8c3-VEH-0",
+      "viaje_id": "DEMO-CAIDA-eab408b4e8c3-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.3989303760043,
+      "ultimo_ms": 1793661939150
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-eed1719e40b5-VEH-0",
+      "viaje_id": "DEMO-CAIDA-eed1719e40b5-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.397982667844744,
+      "ultimo_ms": 1793661939150
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-ef90d3065a47-VEH-0",
+      "viaje_id": "DEMO-CAIDA-ef90d3065a47-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39793583512687,
+      "ultimo_ms": 1793661939140
+    },
+    {
+      "vehiculo_patente": "DEMO-CAIDA-f784298fb05b-VEH-0",
+      "viaje_id": "DEMO-CAIDA-f784298fb05b-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.3978859205872,
+      "ultimo_ms": 1793661939147
+    },
+    {
+      "vehiculo_patente": "DEMO-COMPENSACION-13df1f1d1112-VEH-0",
+      "viaje_id": "DEMO-COMPENSACION-13df1f1d1112-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.4,
+      "ultimo_ms": 1793661914994
+    },
+    {
+      "vehiculo_patente": "DEMO-COMPENSACION-9557cd94769e-VEH-0",
+      "viaje_id": "DEMO-COMPENSACION-9557cd94769e-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39783729227324,
+      "ultimo_ms": 1793661939145
+    },
+    {
+      "vehiculo_patente": "DEMO-COMPENSACION-bcc4260eb349-VEH-0",
+      "viaje_id": "DEMO-COMPENSACION-bcc4260eb349-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39778856482533,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-COMPENSACION-d438e73a633d-VEH-0",
+      "viaje_id": "DEMO-COMPENSACION-d438e73a633d-VIA-0",
+      "latitud": -34.6,
+      "longitud": -58.39878412548565,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-22c6a76a1d66-VEH-0",
+      "viaje_id": "DEMO-CU02-22c6a76a1d66-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793662037147
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-40ad05e913e1-VEH-0",
+      "viaje_id": "DEMO-CU02-40ad05e913e1-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39922523821406,
+      "ultimo_ms": 1793661939153
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-7508ccf1548f-VEH-0",
+      "viaje_id": "DEMO-CU02-7508ccf1548f-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.400246563615255,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-ORDEN-b5a966d01c0c-VEH-0",
+      "viaje_id": "DEMO-CU02-ORDEN-b5a966d01c0c-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.40022157189759,
+      "ultimo_ms": 1793661939155
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-ORDEN-c4710a19277a-VEH-0",
+      "viaje_id": "DEMO-CU02-ORDEN-c4710a19277a-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793662037216
+    },
+    {
+      "vehiculo_patente": "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-0",
+      "viaje_id": "DEMO-CU02-ORDEN-e1e52e5eb4df-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39912887718205,
+      "ultimo_ms": 1793661939148
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-0e7e246236fa-VEH-0",
+      "viaje_id": "DEMO-CU03-0e7e246236fa-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39908096367563,
+      "ultimo_ms": 1793661939139
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-2061fb456f90-VEH-0",
+      "viaje_id": "DEMO-CU03-2061fb456f90-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793661943170
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-226323f4b506-VEH-0",
+      "viaje_id": "DEMO-CU03-226323f4b506-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.399031420634316,
+      "ultimo_ms": 1793661939150
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-2f3d11a39117-VEH-0",
+      "viaje_id": "DEMO-CU03-2f3d11a39117-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39898358077424,
+      "ultimo_ms": 1793661939144
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-3dda78f476a8-VEH-0",
+      "viaje_id": "DEMO-CU03-3dda78f476a8-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793661943576
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-4c9f6685861c-VEH-0",
+      "viaje_id": "DEMO-CU03-4c9f6685861c-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.400100025920324,
+      "ultimo_ms": 1793661939154
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-6273a7713384-VEH-0",
+      "viaje_id": "DEMO-CU03-6273a7713384-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.40007594436399,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-9b387671e851-VEH-0",
+      "viaje_id": "DEMO-CU03-9b387671e851-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39888602477551,
+      "ultimo_ms": 1793661939145
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-a8ad4e88aca8-VEH-0",
+      "viaje_id": "DEMO-CU03-a8ad4e88aca8-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793661943367
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-aa79f96b2909-VEH-0",
+      "viaje_id": "DEMO-CU03-aa79f96b2909-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.400027177041665,
+      "ultimo_ms": 1793661939153
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-c2718ca34e80-VEH-0",
+      "viaje_id": "DEMO-CU03-c2718ca34e80-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.40000392226251,
+      "ultimo_ms": 1793661939145
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-d871c48db888-VEH-0",
+      "viaje_id": "DEMO-CU03-d871c48db888-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39878800345953,
+      "ultimo_ms": 1793661939152
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-dec885ccf998-VEH-0",
+      "viaje_id": "DEMO-CU03-dec885ccf998-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.39995482392345,
+      "ultimo_ms": 1793661939149
+    },
+    {
+      "vehiculo_patente": "DEMO-CU03-eee0fd329e05-VEH-0",
+      "viaje_id": "DEMO-CU03-eee0fd329e05-VIA-0",
+      "latitud": -34.601,
+      "longitud": -58.401,
+      "ultimo_ms": 1793661943264
+    }
+  ],
+  "fecha_inicio_utc": "2026-11-02T23:27:17.300765+00:00"
+}

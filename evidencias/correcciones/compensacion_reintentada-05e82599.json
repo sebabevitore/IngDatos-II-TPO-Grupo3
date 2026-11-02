@@ -1,0 +1,50 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-COMPENSACION-d438e73a633d",
+    "ruta": "DEMO-COMPENSACION-d438e73a633d-RUT-0",
+    "viaje": "DEMO-COMPENSACION-d438e73a633d-VIA-0",
+    "vehiculos": [
+      "DEMO-COMPENSACION-d438e73a633d-VEH-0",
+      "DEMO-COMPENSACION-d438e73a633d-VEH-1",
+      "DEMO-COMPENSACION-d438e73a633d-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-COMPENSACION-d438e73a633d-COND-0",
+      "DEMO-COMPENSACION-d438e73a633d-COND-1",
+      "DEMO-COMPENSACION-d438e73a633d-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-COMPENSACION-d438e73a633d-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-COMPENSACION-d438e73a633d-P-0",
+      "DEMO-COMPENSACION-d438e73a633d-P-1",
+      "DEMO-COMPENSACION-d438e73a633d-P-2",
+      "DEMO-COMPENSACION-d438e73a633d-P-3"
+    ],
+    "tramo": "DEMO-COMPENSACION-d438e73a633d-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-730bc1b8ea7f8d6dc68af56908876c64",
+    "id_operacion": "ENTREGA-730bc1b8ea7f8d6dc68af56908876c64",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_MONGO'",
+    "compensado": false,
+    "estado": "COMPENSACION_PENDIENTE",
+    "errores_compensacion": [
+      "CASSANDRA: Cassandra no disponible al compensar"
+    ]
+  },
+  "recuperacion": [
+    {
+      "exito": false,
+      "saga_id": "ENTREGA-730bc1b8ea7f8d6dc68af56908876c64",
+      "id_operacion": "ENTREGA-730bc1b8ea7f8d6dc68af56908876c64",
+      "error": "Interrupción del ejecutor",
+      "compensado": true,
+      "estado": "COMPENSADO",
+      "errores_compensacion": []
+    }
+  ],
+  "verificado": true
+}

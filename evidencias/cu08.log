@@ -1,0 +1,10 @@
+
+=== PRUEBAS INTEGRALES CU-08 ===
+[OK] Paquete con transferencia
+[OK] Vehiculos y asignaciones
+[OK] Recorridos de Neo4j
+[OK] GPS y alertas de Cassandra
+[OK] Paquete inexistente
+[OK] Codigo vacio rechazado
+
+[OK] TODAS LAS PRUEBAS CU-08 PASARON

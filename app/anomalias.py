@@ -1,263 +1,282 @@
+"""Anomalías con ventana temporal, agenda de paradas y deduplicación durable."""
+
 import hashlib
 import os
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional, Tuple
-
-from app.conexiones import conectar_cassandra, conectar_redis
+from contextlib import ExitStack
+from datetime import timedelta
+from app.conexiones import conectar_mongodb, conectar_cassandra, conectar_redis
+from app.operaciones import Saga
+from app.tiempos import utc
+from app.geometria import distancia_km
 from app.reglas_anomalias import (
     evaluar_exceso_velocidad,
     evaluar_parada_prolongada,
+    obtener_umbral_parada_minutos,
 )
 from app.repositorio_alertas import (
     guardar_alerta_cassandra,
     compensar_alerta_cassandra,
     registrar_paso_log_cassandra,
-    obtener_historico_telemetria_reciente,
+    obtener_historico_ventana,
+    obtener_alertas_abiertas_cassandra,
     marcar_alerta_resuelta_cassandra,
 )
 from app.repositorio_alertas_redis import (
     reclamar_anomalia_redis,
     confirmar_anomalia_redis,
     compensar_claim_redis,
-    resolver_anomalia_redis,
-    obtener_alerta_activa_redis,
+    clave_alerta_activa,
 )
-from app.fallas import InyectorFallas, FallaSimuladaError
 
 
-def generar_alerta_id(patente: str, tipo: str, id_evento: str) -> str:
-    """Genera un identificador determinístico para garantizar idempotencia estricta."""
-    semilla = f"{patente.strip()}:{tipo.strip()}:{id_evento.strip()}"
-    return hashlib.sha1(semilla.encode("utf-8")).hexdigest()[:16]
+def generar_alerta_id(patente, tipo, id_evento):
+    return hashlib.sha1(
+        f"{patente.strip()}:{tipo.strip()}:{id_evento.strip()}".encode()
+    ).hexdigest()[:16]
 
 
-def procesar_anomalias_telemetria(
-    datos: Dict[str, Any], inyector: Optional[InyectorFallas] = None
-) -> Dict[str, Any]:
-    """
-    Orquestador principal del Caso de Uso 3: Detección de anomalías.
+def es_parada_programada(db, datos):
+    viaje = db.viajes.find_one({"_id": datos.get("viaje_id")}) or {}
+    fecha = utc(datos["fecha_hora"])
+    tolerancia = float(os.getenv("PARADA_TOLERANCIA_MINUTOS", "15"))
+    for parada in viaje.get("paradas", []):
+        prevista = parada.get("hora_planificada")
+        if (
+            not prevista
+            or abs((fecha - utc(prevista)).total_seconds()) > tolerancia * 60
+        ):
+            continue
+        punto = db.puntos_entrega.find_one({"_id": parada["punto_entrega_id"]}) or {}
+        if punto.get("latitud") is None or punto.get("longitud") is None:
+            continue
+        if (
+            distancia_km(
+                float(datos["latitud"]),
+                float(datos["longitud"]),
+                punto["latitud"],
+                punto["longitud"],
+            )
+            <= 0.2
+        ):
+            return True
+    return False
 
-    Implementa el flujo:
-      1. Evaluación de reglas de negocio.
-      2. Claim atómico en Redis (evita alertas duplicadas por condición sostenida).
-      3. Persistencia durable en Cassandra (fuente de la verdad).
-         -> Si falla Cassandra: ROLLBACK compensatorio borrando el claim en Redis.
-      4. Confirmación de estado ACTIVE en Redis.
-      5. Emisión de la alerta.
 
-    Registra cada paso en alertas_log_pasos de Cassandra (requisito Sección 5).
-    """
-    patente = datos["vehiculo_patente"].strip()
-    viaje_id = datos.get("viaje_id")
-    id_evento = str(datos.get("id_evento", ""))
+def reconstruir_activa(redis, abierta):
+    clave = clave_alerta_activa(abierta["vehiculo_patente"], abierta["tipo"])
+    redis.hset(
+        clave,
+        mapping=dict(
+            alerta_id=abierta["alerta_id"],
+            estado="ACTIVE",
+            viaje_id=abierta.get("viaje_id") or "",
+            dia=str(abierta["dia"]),
+            fecha_hora=abierta["fecha_hora"] or "",
+            primera_vez=abierta["fecha_hora"] or "",
+            ultima_vez=abierta["fecha_hora"] or "",
+            cantidad="1",
+        ),
+    )
+    redis.expire(clave, int(os.getenv("REDIS_ANOMALIA_TTL_SEGUNDOS", "120")))
 
-    fecha = datetime.fromisoformat(
-        str(datos["fecha_hora"]).replace("Z", "+00:00")
-    ).astimezone(timezone.utc)
-    dia = fecha.date()
-    fecha_iso = fecha.isoformat()
 
-    cluster = None
-    cliente_redis = None
-
-    anomalias_procesadas = []
-
-    try:
-        cluster, sesion = conectar_cassandra()
-        cliente_redis = conectar_redis()
-
-        # 1. Recuperar contexto histórico reciente de Cassandra (últimas lecturas)
-        historial_reciente = obtener_historico_telemetria_reciente(
-            sesion, patente, dia, limite=15
+def compensar_anomalia(saga, redis, cql, error):
+    d = saga.doc.get("alerta")
+    acciones = []
+    if d and "CASSANDRA_WRITE" in saga.doc.get("pasos", []):
+        acciones.append(("CASSANDRA", lambda: compensar_alerta_cassandra(cql, d)))
+    if d:
+        acciones.append(
+            (
+                "REDIS",
+                lambda: compensar_claim_redis(
+                    redis, d["vehiculo_patente"], d["tipo"], d["alerta_id"]
+                ),
+            )
         )
+    return saga.compensar(acciones, error)
 
-        # 2. Evaluar reglas de negocio
-        candidatas = []
-        anomalia_vel = evaluar_exceso_velocidad(datos)
-        if anomalia_vel:
-            candidatas.append(anomalia_vel)
 
-        anomalia_parada = evaluar_parada_prolongada(datos, historial_reciente)
-        if anomalia_parada:
-            candidatas.append(anomalia_parada)
-
-        # 3. Procesar cada anomalía detectada
-        ttl_pending = int(os.getenv("REDIS_ANOMALIA_PENDING_TTL_SEGUNDOS", "30"))
-        ttl_activo = int(os.getenv("REDIS_ANOMALIA_TTL_SEGUNDOS", "120"))
-
+def procesar_anomalias_telemetria(datos, inyector=None):
+    patente = datos["vehiculo_patente"].strip()
+    fecha = utc(datos["fecha_hora"])
+    viaje = datos.get("viaje_id")
+    if not datos.get("id_evento"):
+        raise ValueError("La anomalía requiere id_evento estable")
+    with ExitStack() as stack:
+        mongo = conectar_mongodb()
+        stack.callback(mongo.close)
+        db = mongo["logistica_flota"]
+        cluster, cql = conectar_cassandra()
+        stack.callback(cluster.shutdown)
+        redis = conectar_redis()
+        stack.callback(redis.close)
+        historial = obtener_historico_ventana(
+            cql,
+            patente,
+            fecha - timedelta(minutes=obtener_umbral_parada_minutos() + 2),
+            fecha,
+        )
+        candidatas = [
+            c
+            for c in [
+                evaluar_exceso_velocidad(datos),
+                evaluar_parada_prolongada(
+                    datos, historial, parada_programada=es_parada_programada(db, datos)
+                ),
+            ]
+            if c
+        ]
+        tipos = {c["tipo"] for c in candidatas}
+        # Una lectura normal cierra una condición; no se usa el TTL como fin de anomalía.
+        for abierta in obtener_alertas_abiertas_cassandra(cql, patente):
+            if abierta["tipo"] not in tipos or abierta.get("viaje_id") != viaje:
+                if utc(abierta["fecha_hora"]) > fecha:
+                    continue  # evento fuera de orden
+                guard = Saga(
+                    db,
+                    "CIERRE_ANOMALIA",
+                    dict(id_evento=datos["id_evento"], alerta_id=abierta["alerta_id"]),
+                )
+                if not guard.propia:
+                    continue
+                try:
+                    guard.guardar(cierre=abierta)
+                    guard.bloquear([f"anomalia:{patente}:{abierta['tipo']}"])
+                    guard.paso(
+                        "CIERRE_CASSANDRA",
+                        lambda: marcar_alerta_resuelta_cassandra(
+                            cql,
+                            patente,
+                            abierta["tipo"],
+                            abierta.get("viaje_id"),
+                            abierta["dia"],
+                            utc(abierta["fecha_hora"]).replace(tzinfo=None),
+                            abierta["alerta_id"],
+                        ),
+                    )
+                    compensar_claim_redis(
+                        redis, patente, abierta["tipo"], abierta["alerta_id"]
+                    )
+                    guard.completar(dict(exito=True))
+                except Exception:
+                    confirmado = db.operaciones.find_one({"_id": guard.id})
+                    if confirmado and confirmado.get("estado") == "COMPLETADO":
+                        continue
+                    guard.guardar(estado="RECONCILIACION_PENDIENTE", ejecutor={})
+                    raise
+        procesadas = []
         for cand in candidatas:
             tipo = cand["tipo"]
-            alerta_id = generar_alerta_id(patente, tipo, id_evento)
-
-            datos_alerta = {
-                "alerta_id": alerta_id,
-                "vehiculo_patente": patente,
-                "viaje_id": viaje_id,
-                "tipo": tipo,
-                "descripcion": cand["descripcion"],
-                "latitud": float(datos.get("latitud", 0.0)),
-                "longitud": float(datos.get("longitud", 0.0)),
-                "valor_observado": cand["valor_observado"],
-                "umbral": cand["umbral"],
-                "clave_deduplicacion": f"{patente}:{tipo}:{viaje_id or 'SIN_VIAJE'}",
-                "fecha_hora": fecha_iso,
-                "contexto": historial_reciente[-5:] if historial_reciente else [],
-            }
-
-            # --- PASO 1: CLAIM EN REDIS (Árbitro atómico de concurrencia) ---
-            if inyector:
-                inyector.verificar("REDIS_CLAIM")
-
-            claim_exitoso, motivo_redis = reclamar_anomalia_redis(
-                cliente_redis,
-                patente=patente,
-                tipo=tipo,
-                alerta_id=alerta_id,
-                viaje_id=viaje_id,
-                dia=str(dia),
-                fecha_hora_iso=fecha_iso,
-                ttl_pending=ttl_pending,
-                ttl_activo=ttl_activo,
+            ident = generar_alerta_id(patente, tipo, str(datos["id_evento"]))
+            saga = Saga(
+                db,
+                "ANOMALIA",
+                dict(
+                    id_evento=datos["id_evento"],
+                    patente=patente,
+                    tipo=tipo,
+                    viaje_id=viaje,
+                ),
             )
-
-            if not claim_exitoso:
-                # Devolver el ID durable de la alerta activa, no el UUID de la nueva lectura.
-                activa = obtener_alerta_activa_redis(cliente_redis, patente, tipo)
-                if not activa or not activa.get("alerta_id"):
-                    raise RuntimeError(
-                        "La alerta activa expiró durante la deduplicación; reintentar"
+            if not saga.propia:
+                if saga.doc["estado"] == "COMPLETADO":
+                    procesadas.append(saga.doc["resultado"])
+                    continue
+                raise RuntimeError(f"Anomalía con operación pendiente: {saga.id}")
+            try:
+                saga.bloquear([f"anomalia:{patente}:{tipo}"])
+                abiertas = [
+                    a
+                    for a in obtener_alertas_abiertas_cassandra(cql, patente)
+                    if a["tipo"] == tipo
+                ]
+                if abiertas:
+                    abierta = abiertas[0]
+                    reconstruir_activa(redis, abierta)
+                    resultado = dict(
+                        alerta_id=abierta["alerta_id"],
+                        tipo=tipo,
+                        estado="DEDUPLICADA_SOSTENIDA",
                     )
-                alerta_id = activa["alerta_id"]
-                anomalias_procesadas.append(
-                    {
-                        "alerta_id": alerta_id,
-                        "tipo": tipo,
-                        "estado": "DEDUPLICADA_SOSTENIDA",
-                        "mensaje": "Anomalía en curso; TTL renovado en Redis sin duplicar en Cassandra",
-                    }
+                    saga.completar(resultado)
+                    procesadas.append(resultado)
+                    continue
+                alerta = dict(
+                    alerta_id=ident,
+                    vehiculo_patente=patente,
+                    viaje_id=viaje,
+                    tipo=tipo,
+                    descripcion=cand["descripcion"],
+                    latitud=float(datos["latitud"]),
+                    longitud=float(datos["longitud"]),
+                    valor_observado=cand["valor_observado"],
+                    umbral=cand["umbral"],
+                    clave_deduplicacion=f'{patente}:{tipo}:{viaje or "SIN_VIAJE"}',
+                    fecha_hora=fecha.isoformat(),
+                    contexto=historial[-5:],
                 )
-                continue
+                saga.guardar(alerta=alerta)
 
-            # --- PASO 2: PERSISTENCIA EN CASSANDRA (Fuente duradera de la verdad) ---
-            registrar_paso_log_cassandra(
-                sesion,
-                alerta_id,
-                "CASSANDRA_WRITE",
-                "INICIADO",
-                f"Persistiendo alerta {tipo} en Cassandra",
-            )
-
-            try:
-                if inyector:
-                    inyector.verificar("CASSANDRA_WRITE")
-
-                guardar_alerta_cassandra(sesion, datos_alerta)
-
-                registrar_paso_log_cassandra(
-                    sesion, alerta_id, "CASSANDRA_WRITE", "COMPLETADO"
-                )
-            except Exception as err_cassandra:
-                # COMPENSACIÓN (ROLLBACK):
-                # Si falló la escritura duradera, liberamos el claim de Redis
-                compensar_claim_redis(cliente_redis, patente, tipo, alerta_id)
-
-                try:
-                    registrar_paso_log_cassandra(
-                        sesion,
-                        alerta_id,
-                        "CASSANDRA_WRITE",
-                        "ROLLBACK_COMPENSADO",
-                        f"Fallo en Cassandra: {err_cassandra}. Claim liberado en Redis.",
+                def claim():
+                    ok, _ = reclamar_anomalia_redis(
+                        redis,
+                        patente,
+                        tipo,
+                        ident,
+                        viaje,
+                        str(fecha.date()),
+                        fecha.isoformat(),
                     )
-                except Exception:
-                    pass
+                    if not ok:
+                        raise RuntimeError(
+                            "Claim Redis pendiente; ejecutar recuperación"
+                        )
 
-                raise RuntimeError(
-                    f"Fallo en persistencia de Cassandra para alerta {tipo}. "
-                    f"Rollback completado (claim de Redis liberado). Detalle: {err_cassandra}"
-                ) from err_cassandra
-
-            # --- PASO 3: CONFIRMACIÓN EN REDIS (PENDING -> ACTIVE) ---
-            registrar_paso_log_cassandra(sesion, alerta_id, "REDIS_CONFIRM", "INICIADO")
-
-            try:
-                if inyector:
-                    inyector.verificar("REDIS_CONFIRM")
-
-                confirmado = confirmar_anomalia_redis(
-                    cliente_redis, patente, tipo, alerta_id, ttl_activo=ttl_activo
+                saga.paso("REDIS_CLAIM", claim, inyector)
+                saga.paso(
+                    "CASSANDRA_WRITE",
+                    lambda: guardar_alerta_cassandra(cql, alerta),
+                    inyector,
                 )
 
-                registrar_paso_log_cassandra(
-                    sesion,
-                    alerta_id,
-                    "REDIS_CONFIRM",
-                    "COMPLETADO" if confirmado else "ALERTA_ID_MISMATCH",
-                )
-            except Exception as err_redis_conf:
-                # Cassandra YA tiene el evento persistido (es durable).
-                # No compensamos borrando de Cassandra; dejamos registrado para que el
-                # proceso de reconciliación promueva o repare el estado en Redis.
-                registrar_paso_log_cassandra(
-                    sesion,
-                    alerta_id,
-                    "REDIS_CONFIRM",
-                    "ERROR_PENDIENTE_RECONCILIACION",
-                    str(err_redis_conf),
-                )
-                raise RuntimeError(
-                    f"Alerta guardada en Cassandra pero falló confirmación en Redis. "
-                    f"Queda pendiente para reconciliador. Detalle: {err_redis_conf}"
-                ) from err_redis_conf
+                def confirmar():
+                    if not confirmar_anomalia_redis(redis, patente, tipo, ident):
+                        reconstruir_activa(redis, dict(alerta, dia=str(fecha.date())))
 
-            # --- PASO 4: EMISIÓN DE LA ALERTA (Notificación) ---
-            registrar_paso_log_cassandra(sesion, alerta_id, "NOTIFICACION", "INICIADO")
-
-            try:
-                if inyector:
-                    inyector.verificar("NOTIFICACION")
-
-                # Simulación de emisión al despachador / consola
-                mensaje_alerta = (
-                    f"[ALERTA LOGÍSTICA] Vehículo {patente} | "
-                    f"Tipo: {tipo} | {cand['descripcion']}"
+                saga.paso("REDIS_CONFIRM", confirmar, inyector)
+                saga.paso(
+                    "NOTIFICACION",
+                    lambda: print(
+                        f'[ALERTA LOGÍSTICA] {patente} | {cand["descripcion"]}'
+                    ),
+                    inyector,
                 )
-                print(mensaje_alerta)
-
-                registrar_paso_log_cassandra(
-                    sesion, alerta_id, "NOTIFICACION", "COMPLETADO", mensaje_alerta
+                registrar_paso_log_cassandra(cql, ident, "OPERACION", "COMPLETADO")
+                resultado = dict(
+                    alerta_id=ident,
+                    tipo=tipo,
+                    estado="REGISTRADA_Y_NOTIFICADA",
+                    descripcion=cand["descripcion"],
                 )
-            except Exception as err_notif:
-                registrar_paso_log_cassandra(
-                    sesion, alerta_id, "NOTIFICACION", "ERROR", str(err_notif)
-                )
-                # La alerta ya está guardada y activa en ambos motores; el fallo de notificación
-                # se registra para reintento at-least-once.
+                saga.completar(resultado)
+                procesadas.append(resultado)
+            except Exception as exc:
+                confirmado = db.operaciones.find_one({"_id": saga.id})
+                if confirmado and confirmado.get("estado") == "COMPLETADO":
+                    procesadas.append(confirmado["resultado"])
+                    continue
+                if "CASSANDRA_WRITE" in saga.doc.get(
+                    "pasos_completados", []
+                ) or saga.db.operaciones.find_one(
+                    {"_id": saga.id, "pasos_completados": "CASSANDRA_WRITE"}
+                ):
+                    saga.guardar(
+                        estado="RECONCILIACION_PENDIENTE", error=str(exc), ejecutor={}
+                    )
+                else:
+                    compensar_anomalia(saga, redis, cql, exc)
                 raise
-
-            anomalias_procesadas.append(
-                {
-                    "alerta_id": alerta_id,
-                    "tipo": tipo,
-                    "estado": "REGISTRADA_Y_NOTIFICADA",
-                    "descripcion": cand["descripcion"],
-                }
-            )
-
-        return {
-            "exito": True,
-            "vehiculo_patente": patente,
-            "anomalias_detectadas": anomalias_procesadas,
-        }
-
-    finally:
-        if cluster is not None:
-            try:
-                cluster.shutdown()
-            except Exception:
-                pass
-        if cliente_redis is not None:
-            try:
-                cliente_redis.close()
-            except Exception:
-                pass
+        return dict(
+            exito=True, vehiculo_patente=patente, anomalias_detectadas=procesadas
+        )

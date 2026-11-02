@@ -1,0 +1,47 @@
+{
+  "caso": "CU03",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU03-dbd3b8a20f65",
+    "ruta": "DEMO-CU03-dbd3b8a20f65-RUT-0",
+    "viaje": "DEMO-CU03-dbd3b8a20f65-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-dbd3b8a20f65-VEH-0",
+      "DEMO-CU03-dbd3b8a20f65-VEH-1",
+      "DEMO-CU03-dbd3b8a20f65-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-dbd3b8a20f65-COND-0",
+      "DEMO-CU03-dbd3b8a20f65-COND-1",
+      "DEMO-CU03-dbd3b8a20f65-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-dbd3b8a20f65-PAQ-0",
+      "DEMO-CU03-dbd3b8a20f65-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-dbd3b8a20f65-P-0",
+      "DEMO-CU03-dbd3b8a20f65-P-1",
+      "DEMO-CU03-dbd3b8a20f65-P-2",
+      "DEMO-CU03-dbd3b8a20f65-P-3"
+    ],
+    "tramo": "DEMO-CU03-dbd3b8a20f65-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-CU03-dbd3b8a20f65-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "49847d99f4040a15",
+        "tipo": "EXCESO_VELOCIDAD",
+        "estado": "REGISTRADA_Y_NOTIFICADA",
+        "descripcion": "Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)"
+      }
+    ]
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}

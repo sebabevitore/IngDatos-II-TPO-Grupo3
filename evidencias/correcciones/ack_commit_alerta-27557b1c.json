@@ -1,0 +1,46 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-ACK_ALERTA-75f5080980b1",
+    "ruta": "DEMO-ACK_ALERTA-75f5080980b1-RUT-0",
+    "viaje": "DEMO-ACK_ALERTA-75f5080980b1-VIA-0",
+    "vehiculos": [
+      "DEMO-ACK_ALERTA-75f5080980b1-VEH-0",
+      "DEMO-ACK_ALERTA-75f5080980b1-VEH-1",
+      "DEMO-ACK_ALERTA-75f5080980b1-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-ACK_ALERTA-75f5080980b1-COND-0",
+      "DEMO-ACK_ALERTA-75f5080980b1-COND-1",
+      "DEMO-ACK_ALERTA-75f5080980b1-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-ACK_ALERTA-75f5080980b1-PAQ-0",
+      "DEMO-ACK_ALERTA-75f5080980b1-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-ACK_ALERTA-75f5080980b1-P-0",
+      "DEMO-ACK_ALERTA-75f5080980b1-P-1",
+      "DEMO-ACK_ALERTA-75f5080980b1-P-2",
+      "DEMO-ACK_ALERTA-75f5080980b1-P-3"
+    ],
+    "tramo": "DEMO-ACK_ALERTA-75f5080980b1-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-ACK_ALERTA-75f5080980b1-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "063446a6beaa1efb",
+        "tipo": "EXCESO_VELOCIDAD",
+        "estado": "REGISTRADA_Y_NOTIFICADA",
+        "descripcion": "Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)"
+      }
+    ]
+  },
+  "cierre": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-ACK_ALERTA-75f5080980b1-VEH-0",
+    "anomalias_detectadas": []
+  },
+  "verificado": true
+}

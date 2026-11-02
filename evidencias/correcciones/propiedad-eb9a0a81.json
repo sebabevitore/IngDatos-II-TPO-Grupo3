@@ -1,0 +1,37 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-LOCK-dae1e85e82f5",
+    "ruta": "DEMO-LOCK-dae1e85e82f5-RUT-0",
+    "viaje": "DEMO-LOCK-dae1e85e82f5-VIA-0",
+    "vehiculos": [
+      "DEMO-LOCK-dae1e85e82f5-VEH-0",
+      "DEMO-LOCK-dae1e85e82f5-VEH-1",
+      "DEMO-LOCK-dae1e85e82f5-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-LOCK-dae1e85e82f5-COND-0",
+      "DEMO-LOCK-dae1e85e82f5-COND-1",
+      "DEMO-LOCK-dae1e85e82f5-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-LOCK-dae1e85e82f5-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-LOCK-dae1e85e82f5-P-0",
+      "DEMO-LOCK-dae1e85e82f5-P-1",
+      "DEMO-LOCK-dae1e85e82f5-P-2",
+      "DEMO-LOCK-dae1e85e82f5-P-3"
+    ],
+    "tramo": "DEMO-LOCK-dae1e85e82f5-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-d951ee9e3c88eba5c341168a81da118f",
+    "id_operacion": "ENTREGA-d951ee9e3c88eba5c341168a81da118f",
+    "error": "Recurso en operación: paquete:DEMO-LOCK-dae1e85e82f5-PAQ-0",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificado": true
+}

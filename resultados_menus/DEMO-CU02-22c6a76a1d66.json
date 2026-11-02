@@ -1,0 +1,47 @@
+{
+  "caso": "CU02",
+  "escenario": "ingesta_actual",
+  "fixture": {
+    "demo_id": "DEMO-CU02-22c6a76a1d66",
+    "ruta": "DEMO-CU02-22c6a76a1d66-RUT-0",
+    "viaje": "DEMO-CU02-22c6a76a1d66-VIA-0",
+    "vehiculos": [
+      "DEMO-CU02-22c6a76a1d66-VEH-0",
+      "DEMO-CU02-22c6a76a1d66-VEH-1",
+      "DEMO-CU02-22c6a76a1d66-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU02-22c6a76a1d66-COND-0",
+      "DEMO-CU02-22c6a76a1d66-COND-1",
+      "DEMO-CU02-22c6a76a1d66-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU02-22c6a76a1d66-PAQ-0",
+      "DEMO-CU02-22c6a76a1d66-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU02-22c6a76a1d66-P-0",
+      "DEMO-CU02-22c6a76a1d66-P-1",
+      "DEMO-CU02-22c6a76a1d66-P-2",
+      "DEMO-CU02-22c6a76a1d66-P-3"
+    ],
+    "tramo": "DEMO-CU02-22c6a76a1d66-T0-1-0"
+  },
+  "resultado": {
+    "id_evento": "7b07d699-0c51-4c3a-bf74-75c8b27b30eb",
+    "vehiculo_patente": "DEMO-CU02-22c6a76a1d66-VEH-0",
+    "viaje_id": "DEMO-CU02-22c6a76a1d66-VIA-0",
+    "dia": "2026-11-02",
+    "historial_vehiculo_guardado": true,
+    "historial_viaje_guardado": true,
+    "estado_actualizado_en_redis": true,
+    "motivo_estado_redis": "actualizado",
+    "estado_procesamiento": "COMPLETADO"
+  },
+  "verificaciones": [
+    "Evento MongoDB COMPLETADO",
+    "Dos históricos Cassandra",
+    "Redis actualizado"
+  ],
+  "verificado": true
+}

@@ -1,0 +1,47 @@
+{
+  "caso": "CU02",
+  "escenario": "orden_temporal_independiente",
+  "fixture": {
+    "demo_id": "DEMO-CU02-ORDEN-b5a966d01c0c",
+    "ruta": "DEMO-CU02-ORDEN-b5a966d01c0c-RUT-0",
+    "viaje": "DEMO-CU02-ORDEN-b5a966d01c0c-VIA-0",
+    "vehiculos": [
+      "DEMO-CU02-ORDEN-b5a966d01c0c-VEH-0",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-VEH-1",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU02-ORDEN-b5a966d01c0c-COND-0",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-COND-1",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU02-ORDEN-b5a966d01c0c-PAQ-0",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU02-ORDEN-b5a966d01c0c-P-0",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-P-1",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-P-2",
+      "DEMO-CU02-ORDEN-b5a966d01c0c-P-3"
+    ],
+    "tramo": "DEMO-CU02-ORDEN-b5a966d01c0c-T0-1-0"
+  },
+  "resultado": {
+    "id_evento": "904aeee2-bb10-49eb-8459-4d073cf9229a",
+    "vehiculo_patente": "DEMO-CU02-ORDEN-b5a966d01c0c-VEH-0",
+    "viaje_id": "DEMO-CU02-ORDEN-b5a966d01c0c-VIA-0",
+    "dia": "2026-11-02",
+    "historial_vehiculo_guardado": true,
+    "historial_viaje_guardado": true,
+    "estado_actualizado_en_redis": false,
+    "motivo_estado_redis": "medición antigua o repetida; se conserva el estado actual",
+    "estado_procesamiento": "COMPLETADO"
+  },
+  "verificaciones": [
+    "La demo prepara su propio estado reciente",
+    "Histórico antiguo conservado",
+    "Redis no retrocede"
+  ],
+  "verificado": true
+}

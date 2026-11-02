@@ -1,0 +1,13 @@
+
+test_detencion_cruza_medianoche_y_programada_no_alerta (tests.test_reglas.ReglasTest.test_detencion_cruza_medianoche_y_programada_no_alerta) ... ok
+test_en_parada_intermedia_toma_siguiente_tramo (tests.test_reglas.ReglasTest.test_en_parada_intermedia_toma_siguiente_tramo) ... ok
+test_estado_detencion_no_anula_velocidad_positiva (tests.test_reglas.ReglasTest.test_estado_detencion_no_anula_velocidad_positiva) ... ok
+test_eta_cambia_con_avance_y_velocidad (tests.test_reglas.ReglasTest.test_eta_cambia_con_avance_y_velocidad) ... ok
+test_horarios_invalidos_rechazados (tests.test_reglas.ReglasTest.test_horarios_invalidos_rechazados) ... ok
+test_intervalos_adyacentes_permitidos (tests.test_reglas.ReglasTest.test_intervalos_adyacentes_permitidos) ... ok
+test_punto_intermedio_no_es_desvio (tests.test_reglas.ReglasTest.test_punto_intermedio_no_es_desvio) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.000s
+
+OK

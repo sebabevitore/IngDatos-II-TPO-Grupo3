@@ -14,6 +14,8 @@ class FallaSimuladaError(RuntimeError):
 class InyectorFallas:
     PUNTOS_FALLA = {
         "CU01_NEO4J",
+        "CU01_REDIS_RESERVA",
+        "CU05_PAQUETES",
         "CU01_MONGO",
         "CU01_REDIS_CONFIRM",
         "CU01_PAQUETES",

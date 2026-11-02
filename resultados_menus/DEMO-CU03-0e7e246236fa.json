@@ -1,0 +1,49 @@
+{
+  "caso": "CU03",
+  "escenario": "4",
+  "fixture": {
+    "demo_id": "DEMO-CU03-0e7e246236fa",
+    "ruta": "DEMO-CU03-0e7e246236fa-RUT-0",
+    "viaje": "DEMO-CU03-0e7e246236fa-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-0e7e246236fa-VEH-0",
+      "DEMO-CU03-0e7e246236fa-VEH-1",
+      "DEMO-CU03-0e7e246236fa-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-0e7e246236fa-COND-0",
+      "DEMO-CU03-0e7e246236fa-COND-1",
+      "DEMO-CU03-0e7e246236fa-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-0e7e246236fa-PAQ-0",
+      "DEMO-CU03-0e7e246236fa-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-0e7e246236fa-P-0",
+      "DEMO-CU03-0e7e246236fa-P-1",
+      "DEMO-CU03-0e7e246236fa-P-2",
+      "DEMO-CU03-0e7e246236fa-P-3"
+    ],
+    "tramo": "DEMO-CU03-0e7e246236fa-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "total_alertas_abiertas_cassandra": 1,
+    "reconstruidas_en_redis": [],
+    "confirmadas_en_redis": [
+      {
+        "patente": "DEMO-CU03-0e7e246236fa-VEH-0",
+        "tipo": "EXCESO_VELOCIDAD",
+        "alerta_id": "a38c06e99f03bb30",
+        "motivo": "Promovida de PENDING a ACTIVE en Redis"
+      }
+    ],
+    "huerfanas_limpiadas": []
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}

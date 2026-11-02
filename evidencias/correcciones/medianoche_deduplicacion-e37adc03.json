@@ -1,0 +1,51 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-MEDIANOCHE-bd2b2fe463ee",
+    "ruta": "DEMO-MEDIANOCHE-bd2b2fe463ee-RUT-0",
+    "viaje": "DEMO-MEDIANOCHE-bd2b2fe463ee-VIA-0",
+    "vehiculos": [
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-0",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-1",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-COND-0",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-COND-1",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-P-0",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-P-1",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-P-2",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-P-3"
+    ],
+    "tramo": "DEMO-MEDIANOCHE-bd2b2fe463ee-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "5af3a0d73a81ec51",
+        "tipo": "PARADA_NO_PROGRAMADA",
+        "estado": "REGISTRADA_Y_NOTIFICADA",
+        "descripcion": "Parada prolongada sin movimiento durante 11.0 min (umbral configurado: 10.0 min)"
+      }
+    ]
+  },
+  "repeticion": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "5af3a0d73a81ec51",
+        "tipo": "PARADA_NO_PROGRAMADA",
+        "estado": "DEDUPLICADA_SOSTENIDA"
+      }
+    ]
+  },
+  "verificado": true
+}

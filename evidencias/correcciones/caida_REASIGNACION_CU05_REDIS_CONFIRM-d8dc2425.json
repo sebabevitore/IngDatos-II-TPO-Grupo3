@@ -1,0 +1,48 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-CAIDA-eab408b4e8c3",
+    "ruta": "DEMO-CAIDA-eab408b4e8c3-RUT-0",
+    "viaje": "DEMO-CAIDA-eab408b4e8c3-VIA-0",
+    "vehiculos": [
+      "DEMO-CAIDA-eab408b4e8c3-VEH-0",
+      "DEMO-CAIDA-eab408b4e8c3-VEH-1",
+      "DEMO-CAIDA-eab408b4e8c3-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CAIDA-eab408b4e8c3-COND-0",
+      "DEMO-CAIDA-eab408b4e8c3-COND-1",
+      "DEMO-CAIDA-eab408b4e8c3-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CAIDA-eab408b4e8c3-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CAIDA-eab408b4e8c3-P-0",
+      "DEMO-CAIDA-eab408b4e8c3-P-1",
+      "DEMO-CAIDA-eab408b4e8c3-P-2",
+      "DEMO-CAIDA-eab408b4e8c3-P-3"
+    ],
+    "tramo": "DEMO-CAIDA-eab408b4e8c3-T0-1-0"
+  },
+  "operacion": "REASIGNACION-922b7ab1db2b0fbb2a35c31533046d14",
+  "exit_code": 93,
+  "recuperacion": [
+    {
+      "exito": false,
+      "saga_id": "REASIGNACION-922b7ab1db2b0fbb2a35c31533046d14",
+      "id_operacion": "REASIGNACION-922b7ab1db2b0fbb2a35c31533046d14",
+      "error": "Interrupción del ejecutor",
+      "compensado": true,
+      "estado": "COMPENSADO",
+      "errores_compensacion": []
+    }
+  ],
+  "repeticion": [
+    {
+      "id_operacion": "REASIGNACION-922b7ab1db2b0fbb2a35c31533046d14",
+      "estado": "COMPENSADO",
+      "compensado": true
+    }
+  ],
+  "verificado": true
+}

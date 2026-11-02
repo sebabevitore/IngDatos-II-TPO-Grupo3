@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "mediciones": 50000,
+  "sha256_datos": "7298caa4a6f4193c826b250688bb5280da9aeb300925f357e5a55a20aa90638f",
+  "resumen": {
+    "mediciones_logicas": 50000,
+    "mongo": {
+      "contactos": 151,
+      "usuarios": 1,
+      "conductores": 100,
+      "vehiculos": 100,
+      "puntos_entrega": 50,
+      "rutas": 25,
+      "viajes": 500,
+      "alertas": 500,
+      "paquetes": 2020,
+      "asignaciones": 2000
+    },
+    "cassandra": {
+      "telemetria_por_viaje_dia": 50000,
+      "telemetria_por_vehiculo_dia": 50000,
+      "alertas_por_viaje_dia": 500,
+      "alertas_por_vehiculo_dia": 500,
+      "confirmaciones_entrega_por_viaje_dia": 1950,
+      "tiempos_tramo_historico": 1350,
+      "tiempos_tramo_por_mes": 1350
+    },
+    "neo4j_nodos": 575,
+    "neo4j_relaciones": 850,
+    "redis_claves": 2720
+  }
+}

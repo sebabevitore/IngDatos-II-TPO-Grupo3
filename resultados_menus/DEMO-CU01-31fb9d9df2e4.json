@@ -1,0 +1,45 @@
+{
+  "caso": "CU01",
+  "escenario": "planificacion_persistente",
+  "fixture": {
+    "demo_id": "DEMO-CU01-31fb9d9df2e4",
+    "ruta": "DEMO-CU01-31fb9d9df2e4-RUT-0",
+    "viaje": "1d359216-1851-5125-a146-ecf45cb5d962",
+    "vehiculos": [
+      "DEMO-CU01-31fb9d9df2e4-VEH-0",
+      "DEMO-CU01-31fb9d9df2e4-VEH-1",
+      "DEMO-CU01-31fb9d9df2e4-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU01-31fb9d9df2e4-COND-0",
+      "DEMO-CU01-31fb9d9df2e4-COND-1",
+      "DEMO-CU01-31fb9d9df2e4-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU01-31fb9d9df2e4-PAQ-0",
+      "DEMO-CU01-31fb9d9df2e4-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU01-31fb9d9df2e4-P-0",
+      "DEMO-CU01-31fb9d9df2e4-P-1",
+      "DEMO-CU01-31fb9d9df2e4-P-2",
+      "DEMO-CU01-31fb9d9df2e4-P-3"
+    ],
+    "tramo": "DEMO-CU01-31fb9d9df2e4-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "id_viaje": "1d359216-1851-5125-a146-ecf45cb5d962",
+    "id_operacion": "PLANIFICACION-a580505abedfa5617f381d50907ede1d",
+    "estado": "PLANIFICADO",
+    "neo4j_vinculado": true,
+    "asignaciones": 2
+  },
+  "verificaciones": [
+    "Viaje persistente en logistica_flota",
+    "Asignaciones únicas",
+    "Reserva persistente",
+    "Recorrido consultable en CU08"
+  ],
+  "verificado": true
+}

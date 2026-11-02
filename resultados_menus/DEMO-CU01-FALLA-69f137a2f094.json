@@ -1,0 +1,47 @@
+{
+  "caso": "CU01",
+  "escenario": "rollback_CU01_MONGO",
+  "fixture": {
+    "demo_id": "DEMO-CU01-FALLA-69f137a2f094",
+    "ruta": "DEMO-CU01-FALLA-69f137a2f094-RUT-0",
+    "viaje": null,
+    "vehiculos": [
+      "DEMO-CU01-FALLA-69f137a2f094-VEH-0",
+      "DEMO-CU01-FALLA-69f137a2f094-VEH-1",
+      "DEMO-CU01-FALLA-69f137a2f094-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU01-FALLA-69f137a2f094-COND-0",
+      "DEMO-CU01-FALLA-69f137a2f094-COND-1",
+      "DEMO-CU01-FALLA-69f137a2f094-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU01-FALLA-69f137a2f094-PAQ-0",
+      "DEMO-CU01-FALLA-69f137a2f094-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU01-FALLA-69f137a2f094-P-0",
+      "DEMO-CU01-FALLA-69f137a2f094-P-1",
+      "DEMO-CU01-FALLA-69f137a2f094-P-2",
+      "DEMO-CU01-FALLA-69f137a2f094-P-3"
+    ],
+    "tramo": "DEMO-CU01-FALLA-69f137a2f094-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "PLANIFICACION-daccd9e604a74ba5ad14f1125e2c4318",
+    "id_operacion": "PLANIFICACION-daccd9e604a74ba5ad14f1125e2c4318",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU01_MONGO'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": [],
+    "id_viaje": "034d2cf0-36a2-5074-b9b5-107da28bcd06"
+  },
+  "verificaciones": [
+    "Falla seleccionada detectada",
+    "MongoDB sin viaje ni asignaciones parciales",
+    "Neo4j sin viaje parcial",
+    "Recursos liberados"
+  ],
+  "verificado": true
+}

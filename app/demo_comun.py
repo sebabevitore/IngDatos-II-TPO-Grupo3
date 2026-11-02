@@ -95,10 +95,21 @@ def crear_escenario(e, caso, activo=True, alternativa=True, paquetes=2):
                 longitud=lon,
             )
         )
+    usuario = ident("USR")
+    e.db.usuarios.insert_one(
+        dict(
+            _id=usuario,
+            username=usuario,
+            contacto_id=ident("CT", 0),
+            rol="COORDINADOR",
+            estado="ACTIVO",
+        )
+    )
     e.db.rutas.insert_one(
         dict(
             _id=ruta,
             ruta_id=ruta,
+            planificada_por_usuario_id=usuario,
             demo_id=prefijo,
             nombre=f"Ruta de demostración {caso}",
             estado="HABILITADA",
@@ -164,6 +175,7 @@ def crear_escenario(e, caso, activo=True, alternativa=True, paquetes=2):
                 conductor_id=conductores[0],
                 id_conductor=conductores[0],
                 estado="EN_CURSO",
+                planificado_por_usuario_id=usuario,
                 paquetes=codigos,
                 inicio_planificado=inicio,
                 fin_planificado=ahora + timedelta(hours=2),

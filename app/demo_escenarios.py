@@ -387,7 +387,7 @@ def cu04(escenario):
         lat, lon = (
             (-34.61, -58.42)
             if escenario == 3
-            else (-34.605, -58.405) if escenario == 2 else (-34.601, -58.401)
+            else (-34.615, -58.39) if escenario == 2 else (-34.601, -58.401)
         )
         d, _ = emitir(f, latitud=lat, longitud=lon)
         comprobar_evento(e, d)
@@ -398,11 +398,27 @@ def cu04(escenario):
             r["fuente_eta"] == ("historico" if escenario == 1 else "planificado"),
             "No se consultó la fuente ETA esperada",
         )
+        # Invariantes funcionales: tiempo restante, agenda presente y sensibilidad
+        # al histórico. La fórmula también tiene pruebas unitarias independientes.
         comprobar(
-            r["eta_minutos"]
-            == (15.0 if escenario == 1 else 8 if escenario == 2 else 12),
-            "ETA incorrecto",
+            0 <= r["eta_minutos"] <= 30, "ETA restante fuera del rango de la fixture"
         )
+        comprobar(r["hora_planificada"] is not None, "Falta horario previsto")
+        comprobar(
+            r["base_planificada"] == "horarios_paradas",
+            "No se usó la agenda de paradas",
+        )
+        if escenario == 1:
+            comprobar(
+                abs(r["eta_minutos"] - 9.6) < 0.15,
+                "El histórico no modifica la duración restante esperada",
+            )
+        if escenario == 3:
+            comprobar(
+                r["proximo_punto"] == f["puntos"][2]
+                and abs(r["eta_minutos"] - 8.8) < 0.1,
+                "En la parada intermedia no se calculó el siguiente tramo",
+            )
         return guardar_resultado(
             "CU04",
             str(escenario),
@@ -465,7 +481,12 @@ def cu05(escenario):
                         "Paquete sin asignación o duplicado",
                     )
         else:
-            punto = {3: "CU05_NEO4J", 4: "CU05_MONGO"}.get(escenario)
+            punto = {
+                3: "CU05_NEO4J",
+                4: "CU05_MONGO",
+                5: "CU05_REDIS_CONFIRM",
+                6: "CU05_PAQUETES",
+            }.get(escenario)
             r = reasignar_por_averia(
                 datos, inyector=InyectorFallas(punto) if punto else None
             )
@@ -548,7 +569,9 @@ def cu06(escenario):
             latitud=-34.63,
             longitud=-58.45,
         )
-        punto = {3: "CU06_CASSANDRA", 4: "CU06_MONGO"}.get(escenario)
+        punto = {3: "CU06_CASSANDRA", 4: "CU06_MONGO", 5: "CU06_REDIS_CONFIRM"}.get(
+            escenario
+        )
         if escenario == 2:
             with ThreadPoolExecutor(max_workers=2) as pool:
                 r = [

@@ -1,0 +1,45 @@
+{
+  "caso": "CU06",
+  "escenario": "3",
+  "fixture": {
+    "demo_id": "DEMO-CU06-5e43aa4dfb06",
+    "ruta": "DEMO-CU06-5e43aa4dfb06-RUT-0",
+    "viaje": "DEMO-CU06-5e43aa4dfb06-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-5e43aa4dfb06-VEH-0",
+      "DEMO-CU06-5e43aa4dfb06-VEH-1",
+      "DEMO-CU06-5e43aa4dfb06-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-5e43aa4dfb06-COND-0",
+      "DEMO-CU06-5e43aa4dfb06-COND-1",
+      "DEMO-CU06-5e43aa4dfb06-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-5e43aa4dfb06-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-5e43aa4dfb06-P-0",
+      "DEMO-CU06-5e43aa4dfb06-P-1",
+      "DEMO-CU06-5e43aa4dfb06-P-2",
+      "DEMO-CU06-5e43aa4dfb06-P-3"
+    ],
+    "tramo": "DEMO-CU06-5e43aa4dfb06-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-789fe4895d7e86672273ef6429f9af25",
+    "id_operacion": "ENTREGA-789fe4895d7e86672273ef6429f9af25",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_CASSANDRA'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}

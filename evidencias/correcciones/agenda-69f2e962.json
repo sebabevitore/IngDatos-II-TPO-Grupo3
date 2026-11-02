@@ -1,0 +1,58 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-AGENDA-165395f11bdc",
+    "ruta": "DEMO-AGENDA-165395f11bdc-RUT-0",
+    "viaje": null,
+    "vehiculos": [
+      "DEMO-AGENDA-165395f11bdc-VEH-0",
+      "DEMO-AGENDA-165395f11bdc-VEH-1",
+      "DEMO-AGENDA-165395f11bdc-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-AGENDA-165395f11bdc-COND-0",
+      "DEMO-AGENDA-165395f11bdc-COND-1",
+      "DEMO-AGENDA-165395f11bdc-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-AGENDA-165395f11bdc-PAQ-0",
+      "DEMO-AGENDA-165395f11bdc-PAQ-1",
+      "DEMO-AGENDA-165395f11bdc-PAQ-2"
+    ],
+    "puntos": [
+      "DEMO-AGENDA-165395f11bdc-P-0",
+      "DEMO-AGENDA-165395f11bdc-P-1",
+      "DEMO-AGENDA-165395f11bdc-P-2",
+      "DEMO-AGENDA-165395f11bdc-P-3"
+    ],
+    "tramo": "DEMO-AGENDA-165395f11bdc-T0-1-0"
+  },
+  "resultados": [
+    {
+      "exito": true,
+      "id_viaje": "1b63e463-39f7-50d3-a245-11cf1724b811",
+      "id_operacion": "PLANIFICACION-81cbcbccbbd1a7a7da3df091ec4c998a",
+      "estado": "PLANIFICADO",
+      "neo4j_vinculado": true,
+      "asignaciones": 1
+    },
+    {
+      "exito": true,
+      "id_viaje": "78616bd7-a36d-5861-a2bd-d6d31a73b758",
+      "id_operacion": "PLANIFICACION-112cb7b5da06b7481b173e0c3d2d9eab",
+      "estado": "PLANIFICADO",
+      "neo4j_vinculado": true,
+      "asignaciones": 1
+    },
+    {
+      "exito": false,
+      "saga_id": "PLANIFICACION-dd0c9191d4eb6efb6753768cd1fa19cb",
+      "id_operacion": "PLANIFICACION-dd0c9191d4eb6efb6753768cd1fa19cb",
+      "error": "El vehículo o conductor tiene un viaje superpuesto",
+      "compensado": true,
+      "estado": "COMPENSADO",
+      "errores_compensacion": [],
+      "id_viaje": "8357a6dd-c3ad-56ac-a164-a0ecc90c388b"
+    }
+  ],
+  "verificado": true
+}

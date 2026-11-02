@@ -1,0 +1,247 @@
+{
+  "caso": "CU02",
+  "escenario": "ingesta_actual",
+  "fixture": {
+    "demo_id": "DEMO-CU02-40ad05e913e1",
+    "ruta": "DEMO-CU02-40ad05e913e1-RUT-0",
+    "viaje": "DEMO-CU02-40ad05e913e1-VIA-0",
+    "vehiculos": [
+      "DEMO-CU02-40ad05e913e1-VEH-0",
+      "DEMO-CU02-40ad05e913e1-VEH-1",
+      "DEMO-CU02-40ad05e913e1-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU02-40ad05e913e1-COND-0",
+      "DEMO-CU02-40ad05e913e1-COND-1",
+      "DEMO-CU02-40ad05e913e1-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU02-40ad05e913e1-PAQ-0",
+      "DEMO-CU02-40ad05e913e1-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU02-40ad05e913e1-P-0",
+      "DEMO-CU02-40ad05e913e1-P-1",
+      "DEMO-CU02-40ad05e913e1-P-2",
+      "DEMO-CU02-40ad05e913e1-P-3"
+    ],
+    "tramo": "DEMO-CU02-40ad05e913e1-T0-1-0"
+  },
+  "resultado": {
+    "id_evento": "6dd3ff58-0ffe-4687-bfe1-340a7e9fa64a",
+    "vehiculo_patente": "DEMO-CU02-40ad05e913e1-VEH-0",
+    "viaje_id": "DEMO-CU02-40ad05e913e1-VIA-0",
+    "dia": "2026-11-02",
+    "historial_vehiculo_guardado": true,
+    "historial_viaje_guardado": true,
+    "estado_actualizado_en_redis": true,
+    "motivo_estado_redis": "actualizado",
+    "estado_procesamiento": "COMPLETADO"
+  },
+  "verificaciones": [
+    "Evento MongoDB COMPLETADO",
+    "Dos históricos Cassandra",
+    "Redis actualizado"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU02-40ad05e913e1-PAQ-0
+{
+  "caso": "CU02",
+  "escenario": "orden_temporal_independiente",
+  "fixture": {
+    "demo_id": "DEMO-CU02-ORDEN-e1e52e5eb4df",
+    "ruta": "DEMO-CU02-ORDEN-e1e52e5eb4df-RUT-0",
+    "viaje": "DEMO-CU02-ORDEN-e1e52e5eb4df-VIA-0",
+    "vehiculos": [
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-1",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-COND-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-COND-1",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-PAQ-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-P-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-P-1",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-P-2",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-P-3"
+    ],
+    "tramo": "DEMO-CU02-ORDEN-e1e52e5eb4df-T0-1-0"
+  },
+  "resultado": {
+    "id_evento": "2715daae-3a01-4754-bfb2-7ce16c12f512",
+    "vehiculo_patente": "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-0",
+    "viaje_id": "DEMO-CU02-ORDEN-e1e52e5eb4df-VIA-0",
+    "dia": "2026-11-02",
+    "historial_vehiculo_guardado": true,
+    "historial_viaje_guardado": true,
+    "estado_actualizado_en_redis": false,
+    "motivo_estado_redis": "medición antigua o repetida; se conserva el estado actual",
+    "estado_procesamiento": "COMPLETADO"
+  },
+  "verificaciones": [
+    "La demo prepara su propio estado reciente",
+    "Histórico antiguo conservado",
+    "Redis no retrocede"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU02-ORDEN-e1e52e5eb4df-PAQ-0
+Se enviarán lecturas reales a 50 vehículos con viajes EN_CURSO existentes.
+Resultados: /Users/sebabevitore/Desktop/TPO-ingdato2/resultados_menus/simulaciones/DEMO-CU02-SIM-e472426a9acd
+Iniciando 50 emisores concurrentes; cada uno enviará 5 mediciones mediante CU-02.
+Envíos terminados: 250/250. Verificando lo persistido...
+{
+  "estado": "SIMULACION_VERIFICADA",
+  "motores_reales": true,
+  "vehiculos": 50,
+  "mediciones": 250,
+  "eventos_mongodb_completados": 250,
+  "filas_cassandra_por_viaje": 250,
+  "filas_cassandra_por_vehiculo": 250,
+  "estados_redis_verificados": 50,
+  "maximo_cu02_en_curso": 50,
+  "reintentos": 0
+}
+{
+  "caso": "CU02",
+  "escenario": "simulacion_50",
+  "fixture": {
+    "demo_id": "DEMO-CU02-SIM-e472426a9acd",
+    "paquetes": [],
+    "vehiculos": [
+      "DEMO-ACK_COMMIT-14d23d9d6dd1-VEH-0",
+      "DEMO-ALERTA_PARCIAL-8a29af5cc255-VEH-0",
+      "DEMO-ALERTA_PARCIAL-8db7ef8f5ae1-VEH-0",
+      "DEMO-CAIDA-1967e4ee37a5-VEH-0",
+      "DEMO-CAIDA-3b1c63faddea-VEH-0",
+      "DEMO-CAIDA-493ea71a9f0f-VEH-0",
+      "DEMO-CAIDA-c07d9301d31b-VEH-0",
+      "DEMO-CAIDA-c0bb454005b9-VEH-0",
+      "DEMO-CAIDA-eed1719e40b5-VEH-0",
+      "DEMO-CAIDA-ef90d3065a47-VEH-0",
+      "DEMO-CAIDA-f784298fb05b-VEH-0",
+      "DEMO-COMPENSACION-9557cd94769e-VEH-0",
+      "DEMO-COMPENSACION-bcc4260eb349-VEH-0",
+      "DEMO-CU02-40ad05e913e1-VEH-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-VEH-0",
+      "DEMO-CU03-0e7e246236fa-VEH-0",
+      "DEMO-CU03-226323f4b506-VEH-0",
+      "DEMO-CU03-2f3d11a39117-VEH-0",
+      "DEMO-CU03-9b387671e851-VEH-0",
+      "DEMO-CU03-d871c48db888-VEH-0",
+      "DEMO-CU04-3377326889cc-VEH-0",
+      "DEMO-CU04-890b2e0b62b6-VEH-0",
+      "DEMO-CU04-896777f66bc3-VEH-0",
+      "DEMO-CU05-2af3c8b8890e-VEH-0",
+      "DEMO-CU05-2af3c8b8890e-VEH-1",
+      "DEMO-CU05-61719aa30a95-VEH-0",
+      "DEMO-CU05-d7c7a81c7a9d-VEH-0",
+      "DEMO-CU05-eb2582d77b7f-VEH-1",
+      "DEMO-CU06-47436c545a6c-VEH-0",
+      "DEMO-CU06-87fe0e3e3bb7-VEH-0",
+      "DEMO-CU06-c764557c4b5b-VEH-0",
+      "DEMO-CU06-e865f91b0a1a-VEH-0",
+      "DEMO-FINAL05-22b6b1234c19-VEH-0",
+      "DEMO-FINAL05-39cfc82edd3a-VEH-0",
+      "DEMO-FINAL05-8b55c0e605b5-VEH-0",
+      "DEMO-FINAL05-97a87bda9338-VEH-0",
+      "DEMO-FINAL06-86917d833763-VEH-0",
+      "DEMO-FINAL06-b2feeb30ba62-VEH-0",
+      "DEMO-LOCK-670d33814276-VEH-0",
+      "DEMO-LOCK-7597c67e8adf-VEH-0",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-VEH-0",
+      "DEMO-MEDIANOCHE-c37b886fcc01-VEH-0",
+      "DEMO-METRICAS-a6a4204b7c8b-VEH-0",
+      "DEMO-METRICAS-cac2c8e3f9ef-VEH-0",
+      "SEED26-VEH-00000",
+      "SEED26-VEH-00001",
+      "SEED26-VEH-00002",
+      "SEED26-VEH-00003",
+      "SEED26-VEH-00004",
+      "SEED26-VEH-00005"
+    ],
+    "viajes": [
+      "DEMO-ACK_COMMIT-14d23d9d6dd1-VIA-0",
+      "DEMO-ALERTA_PARCIAL-8a29af5cc255-VIA-0",
+      "DEMO-ALERTA_PARCIAL-8db7ef8f5ae1-VIA-0",
+      "DEMO-CAIDA-1967e4ee37a5-VIA-0",
+      "DEMO-CAIDA-3b1c63faddea-VIA-0",
+      "DEMO-CAIDA-493ea71a9f0f-VIA-0",
+      "DEMO-CAIDA-c07d9301d31b-VIA-0",
+      "DEMO-CAIDA-c0bb454005b9-VIA-0",
+      "DEMO-CAIDA-eed1719e40b5-VIA-0",
+      "DEMO-CAIDA-ef90d3065a47-VIA-0",
+      "DEMO-CAIDA-f784298fb05b-VIA-0",
+      "DEMO-COMPENSACION-9557cd94769e-VIA-0",
+      "DEMO-COMPENSACION-bcc4260eb349-VIA-0",
+      "DEMO-CU02-40ad05e913e1-VIA-0",
+      "DEMO-CU02-ORDEN-e1e52e5eb4df-VIA-0",
+      "DEMO-CU03-0e7e246236fa-VIA-0",
+      "DEMO-CU03-226323f4b506-VIA-0",
+      "DEMO-CU03-2f3d11a39117-VIA-0",
+      "DEMO-CU03-9b387671e851-VIA-0",
+      "DEMO-CU03-d871c48db888-VIA-0",
+      "DEMO-CU04-3377326889cc-VIA-0",
+      "DEMO-CU04-890b2e0b62b6-VIA-0",
+      "DEMO-CU04-896777f66bc3-VIA-0",
+      "DEMO-CU05-2af3c8b8890e-VIA-0",
+      "VIAJE-RESCATE-4363501dff53540cb77182b98c90576c",
+      "DEMO-CU05-61719aa30a95-VIA-0",
+      "DEMO-CU05-d7c7a81c7a9d-VIA-0",
+      "VIAJE-RESCATE-989f1fa6be235e93b4c4810e75e893cd",
+      "DEMO-CU06-47436c545a6c-VIA-0",
+      "DEMO-CU06-87fe0e3e3bb7-VIA-0",
+      "DEMO-CU06-c764557c4b5b-VIA-0",
+      "DEMO-CU06-e865f91b0a1a-VIA-0",
+      "DEMO-FINAL05-22b6b1234c19-VIA-0",
+      "DEMO-FINAL05-39cfc82edd3a-VIA-0",
+      "DEMO-FINAL05-8b55c0e605b5-VIA-0",
+      "DEMO-FINAL05-97a87bda9338-VIA-0",
+      "DEMO-FINAL06-86917d833763-VIA-0",
+      "DEMO-FINAL06-b2feeb30ba62-VIA-0",
+      "DEMO-LOCK-670d33814276-VIA-0",
+      "DEMO-LOCK-7597c67e8adf-VIA-0",
+      "DEMO-MEDIANOCHE-bd2b2fe463ee-VIA-0",
+      "DEMO-MEDIANOCHE-c37b886fcc01-VIA-0",
+      "DEMO-METRICAS-a6a4204b7c8b-VIA-0",
+      "DEMO-METRICAS-cac2c8e3f9ef-VIA-0",
+      "SEED26-VIA-00400",
+      "SEED26-VIA-00401",
+      "SEED26-VIA-00402",
+      "SEED26-VIA-00403",
+      "SEED26-VIA-00404",
+      "SEED26-VIA-00405"
+    ],
+    "carpeta_simulacion": "resultados_menus/simulaciones/DEMO-CU02-SIM-e472426a9acd"
+  },
+  "resultado": {
+    "estado": "SIMULACION_VERIFICADA",
+    "motores_reales": true,
+    "vehiculos": 50,
+    "mediciones": 250,
+    "eventos_mongodb_completados": 250,
+    "filas_cassandra_por_viaje": 250,
+    "filas_cassandra_por_vehiculo": 250,
+    "estados_redis_verificados": 50,
+    "maximo_cu02_en_curso": 50,
+    "reintentos": 0
+  },
+  "verificaciones": [
+    "50 emisores y 250 mediciones reales",
+    "Concurrencia y persistencia verificadas por CU02"
+  ],
+  "verificado": true
+}
+
+[OK] 3 escenarios verificados: CU-02
+
