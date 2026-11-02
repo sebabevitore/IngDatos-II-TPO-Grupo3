@@ -14,7 +14,7 @@ from app.conexiones import (
     conectar_mongodb,
     conectar_cassandra,
     conectar_redis,
-    conectar_neo4j
+    conectar_neo4j,
 )
 
 
@@ -76,35 +76,49 @@ def probar_conexiones():
 
 def ejecutar_cu(caso: int):
     """Enruta la ejecución al menú especializado de cada caso de uso."""
+    argumentos_originales = sys.argv[:]
+    sys.argv = [sys.argv[0]]  # El número del CU no es una subopción del menú hijo.
     try:
         if caso == 1:
             from app.menu_cu01 import menu_cu01
+
             menu_cu01()
         elif caso == 2:
             from app.menu_cu02 import menu_cu02
+
             menu_cu02()
         elif caso == 3:
             from app.menu_cu03 import menu as menu_cu03
+
             menu_cu03()
         elif caso == 4:
             from app.menu_cu04 import menu as menu_cu04
+
             menu_cu04()
         elif caso == 5:
             from app.menu_cu05 import menu as menu_cu05
+
             menu_cu05()
         elif caso == 6:
             from app.menu_cu06 import menu as menu_cu06
+
             menu_cu06()
         elif caso == 7:
             from app.menu_cu07 import menu as menu_cu07
+
             menu_cu07()
         elif caso == 8:
             from app.menu_cu08 import menu_cu08
+
             menu_cu08()
         else:
             print(f"[ERROR] Caso de uso CU-{caso:02d} no reconocido.")
     except Exception as err:
-        print(f"\n[ERROR EN CU-{caso:02d}] Ocurrió una excepción durante la ejecución: {err}")
+        print(
+            f"\n[ERROR EN CU-{caso:02d}] Ocurrió una excepción durante la ejecución: {err}"
+        )
+    finally:
+        sys.argv = argumentos_originales
 
 
 def menu_principal():
@@ -124,19 +138,33 @@ def menu_principal():
         print("   TPO Ingeniería de Datos II | MongoDB · Cassandra · Redis · Neo4j")
         print("=" * 75)
         print("  1. CU-01: Planificación de un viaje (MongoDB + Redis + Neo4j)")
-        print("  2. CU-02: Ingesta masiva de telemetría GPS (Cassandra + Redis)")
+        print(
+            "  2. CU-02: Ingesta GPS y simulación de 50 vehículos (MongoDB + Cassandra + Redis)"
+        )
         print("  3. CU-03: Detección y deduplicación de anomalías (Cassandra + Redis)")
-        print("  4. CU-04: Cálculo de ETA y detección de desvíos (Redis + Neo4j + Cassandra)")
+        print(
+            "  4. CU-04: Cálculo de ETA y detección de desvíos (Redis + Neo4j + Cassandra)"
+        )
         print("  5. CU-05: Reasignación por avería y rescate (MongoDB + Redis + Neo4j)")
-        print("  6. CU-06: Confirmación de entrega e idempotencia (MongoDB + Cassandra + Redis)")
+        print(
+            "  6. CU-06: Confirmación de entrega e idempotencia (MongoDB + Cassandra + Redis)"
+        )
         print("  7. CU-07: Rutas alternativas y bloqueos viales (Neo4j + Redis)")
-        print("  8. CU-08: Trazabilidad integral de un paquete (MongoDB + Cassandra + Neo4j)")
-        print("  -------------------------------------------------------------------------")
+        print(
+            "  8. CU-08: Trazabilidad integral de un paquete (MongoDB + Cassandra + Neo4j)"
+        )
+        print(
+            "  -------------------------------------------------------------------------"
+        )
         print("  9. Diagnóstico de conectividad con los 4 motores")
         print("  0. Salir")
         print("=" * 75)
 
-        opcion = input("\nSeleccione una opción (0-9): ").strip()
+        try:
+            opcion = input("\nSeleccione una opción (0-9): ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nFinalizando ejecución.")
+            break
 
         if opcion == "0" or opcion.lower() in ["salir", "exit"]:
             print("\nFinalizando ejecución. ¡Hasta luego!")

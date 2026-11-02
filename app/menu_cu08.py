@@ -1,4 +1,3 @@
-
 import os
 import sys
 
@@ -86,24 +85,28 @@ def menu_cu08():
         print("1. Consultar trazabilidad de un paquete")
         print("0. Volver / Salir")
 
-        opcion = input("\nSeleccione una opcion: ").strip()
+        try:
+            opcion = input("\nSeleccione una opcion: ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return
 
         if opcion == "0":
             return
 
         if opcion == "1":
-            codigo = input(
-                "Ingrese el codigo de seguimiento: "
-            ).strip()
+            try:
+                codigo = input("Ingrese el codigo de seguimiento: ").strip()
+            except (EOFError, KeyboardInterrupt):
+                print()
+                continue
 
             if not codigo:
                 print("[ERROR] El codigo no puede estar vacio")
                 continue
 
             try:
-                resultado = consultar_trazabilidad_completa(
-                    codigo
-                )
+                resultado = consultar_trazabilidad_completa(codigo)
 
                 mostrar_trazabilidad(resultado)
 

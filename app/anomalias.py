@@ -32,12 +32,11 @@ def generar_alerta_id(patente: str, tipo: str, id_evento: str) -> str:
 
 
 def procesar_anomalias_telemetria(
-    datos: Dict[str, Any],
-    inyector: Optional[InyectorFallas] = None
+    datos: Dict[str, Any], inyector: Optional[InyectorFallas] = None
 ) -> Dict[str, Any]:
     """
     Orquestador principal del Caso de Uso 3: Detección de anomalías.
-    
+
     Implementa el flujo:
       1. Evaluación de reglas de negocio.
       2. Claim atómico en Redis (evita alertas duplicadas por condición sostenida).
@@ -45,7 +44,7 @@ def procesar_anomalias_telemetria(
          -> Si falla Cassandra: ROLLBACK compensatorio borrando el claim en Redis.
       4. Confirmación de estado ACTIVE en Redis.
       5. Emisión de la alerta.
-    
+
     Registra cada paso en alertas_log_pasos de Cassandra (requisito Sección 5).
     """
     patente = datos["vehiculo_patente"].strip()
@@ -102,7 +101,7 @@ def procesar_anomalias_telemetria(
                 "umbral": cand["umbral"],
                 "clave_deduplicacion": f"{patente}:{tipo}:{viaje_id or 'SIN_VIAJE'}",
                 "fecha_hora": fecha_iso,
-                "contexto": historial_reciente[-5:] if historial_reciente else []
+                "contexto": historial_reciente[-5:] if historial_reciente else [],
             }
 
             # --- PASO 1: CLAIM EN REDIS (Árbitro atómico de concurrencia) ---
@@ -118,23 +117,34 @@ def procesar_anomalias_telemetria(
                 dia=str(dia),
                 fecha_hora_iso=fecha_iso,
                 ttl_pending=ttl_pending,
-                ttl_activo=ttl_activo
+                ttl_activo=ttl_activo,
             )
 
             if not claim_exitoso:
-                # La anomalía ya está activa y fue sostenida. No duplicamos en Cassandra.
-                anomalias_procesadas.append({
-                    "alerta_id": alerta_id,
-                    "tipo": tipo,
-                    "estado": "DEDUPLICADA_SOSTENIDA",
-                    "mensaje": "Anomalía en curso; TTL renovado en Redis sin duplicar en Cassandra"
-                })
+                # Devolver el ID durable de la alerta activa, no el UUID de la nueva lectura.
+                activa = obtener_alerta_activa_redis(cliente_redis, patente, tipo)
+                if not activa or not activa.get("alerta_id"):
+                    raise RuntimeError(
+                        "La alerta activa expiró durante la deduplicación; reintentar"
+                    )
+                alerta_id = activa["alerta_id"]
+                anomalias_procesadas.append(
+                    {
+                        "alerta_id": alerta_id,
+                        "tipo": tipo,
+                        "estado": "DEDUPLICADA_SOSTENIDA",
+                        "mensaje": "Anomalía en curso; TTL renovado en Redis sin duplicar en Cassandra",
+                    }
+                )
                 continue
 
             # --- PASO 2: PERSISTENCIA EN CASSANDRA (Fuente duradera de la verdad) ---
             registrar_paso_log_cassandra(
-                sesion, alerta_id, "CASSANDRA_WRITE", "INICIADO",
-                f"Persistiendo alerta {tipo} en Cassandra"
+                sesion,
+                alerta_id,
+                "CASSANDRA_WRITE",
+                "INICIADO",
+                f"Persistiendo alerta {tipo} en Cassandra",
             )
 
             try:
@@ -153,8 +163,11 @@ def procesar_anomalias_telemetria(
 
                 try:
                     registrar_paso_log_cassandra(
-                        sesion, alerta_id, "CASSANDRA_WRITE", "ROLLBACK_COMPENSADO",
-                        f"Fallo en Cassandra: {err_cassandra}. Claim liberado en Redis."
+                        sesion,
+                        alerta_id,
+                        "CASSANDRA_WRITE",
+                        "ROLLBACK_COMPENSADO",
+                        f"Fallo en Cassandra: {err_cassandra}. Claim liberado en Redis.",
                     )
                 except Exception:
                     pass
@@ -165,9 +178,7 @@ def procesar_anomalias_telemetria(
                 ) from err_cassandra
 
             # --- PASO 3: CONFIRMACIÓN EN REDIS (PENDING -> ACTIVE) ---
-            registrar_paso_log_cassandra(
-                sesion, alerta_id, "REDIS_CONFIRM", "INICIADO"
-            )
+            registrar_paso_log_cassandra(sesion, alerta_id, "REDIS_CONFIRM", "INICIADO")
 
             try:
                 if inyector:
@@ -178,16 +189,21 @@ def procesar_anomalias_telemetria(
                 )
 
                 registrar_paso_log_cassandra(
-                    sesion, alerta_id, "REDIS_CONFIRM",
-                    "COMPLETADO" if confirmado else "ALERTA_ID_MISMATCH"
+                    sesion,
+                    alerta_id,
+                    "REDIS_CONFIRM",
+                    "COMPLETADO" if confirmado else "ALERTA_ID_MISMATCH",
                 )
             except Exception as err_redis_conf:
                 # Cassandra YA tiene el evento persistido (es durable).
                 # No compensamos borrando de Cassandra; dejamos registrado para que el
                 # proceso de reconciliación promueva o repare el estado en Redis.
                 registrar_paso_log_cassandra(
-                    sesion, alerta_id, "REDIS_CONFIRM", "ERROR_PENDIENTE_RECONCILIACION",
-                    str(err_redis_conf)
+                    sesion,
+                    alerta_id,
+                    "REDIS_CONFIRM",
+                    "ERROR_PENDIENTE_RECONCILIACION",
+                    str(err_redis_conf),
                 )
                 raise RuntimeError(
                     f"Alerta guardada en Cassandra pero falló confirmación en Redis. "
@@ -195,9 +211,7 @@ def procesar_anomalias_telemetria(
                 ) from err_redis_conf
 
             # --- PASO 4: EMISIÓN DE LA ALERTA (Notificación) ---
-            registrar_paso_log_cassandra(
-                sesion, alerta_id, "NOTIFICACION", "INICIADO"
-            )
+            registrar_paso_log_cassandra(sesion, alerta_id, "NOTIFICACION", "INICIADO")
 
             try:
                 if inyector:
@@ -221,17 +235,19 @@ def procesar_anomalias_telemetria(
                 # se registra para reintento at-least-once.
                 raise
 
-            anomalias_procesadas.append({
-                "alerta_id": alerta_id,
-                "tipo": tipo,
-                "estado": "REGISTRADA_Y_NOTIFICADA",
-                "descripcion": cand["descripcion"]
-            })
+            anomalias_procesadas.append(
+                {
+                    "alerta_id": alerta_id,
+                    "tipo": tipo,
+                    "estado": "REGISTRADA_Y_NOTIFICADA",
+                    "descripcion": cand["descripcion"],
+                }
+            )
 
         return {
             "exito": True,
             "vehiculo_patente": patente,
-            "anomalias_detectadas": anomalias_procesadas
+            "anomalias_detectadas": anomalias_procesadas,
         }
 
     finally:
@@ -245,4 +261,3 @@ def procesar_anomalias_telemetria(
                 cliente_redis.close()
             except Exception:
                 pass
-

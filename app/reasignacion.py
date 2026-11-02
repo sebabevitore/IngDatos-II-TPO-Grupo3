@@ -25,17 +25,16 @@ from app.repositorio_reasignacion_mongo import (
 
 
 def reasignar_por_averia(
-    datos_averia: Dict[str, Any],
-    inyector: Optional[InyectorFallas] = None
+    datos_averia: Dict[str, Any], inyector: Optional[InyectorFallas] = None
 ) -> Dict[str, Any]:
     """
     Ejecuta el proceso Saga de reasignación por avería mecánica:
-    
+
       Paso 1: [Redis] Reserva atómica del vehículo y chofer de reemplazo.
       Paso 2: [Neo4j] Validación vial y vinculación del recorrido de rescate en el grafo.
       Paso 3: [MongoDB] Cierre de asignaciones anteriores y creación de las nuevas (sin huérfanos ni duplicados).
       Paso 4: [Redis] Consolidación de estados operativos definitivos (AVERIADO / EN_VIAJE).
-      
+
     Si cualquier paso falla, se disparan las compensaciones inversas exactas.
     """
     id_viaje_averiado = datos_averia["id_viaje_averiado"]
@@ -59,6 +58,22 @@ def reasignar_por_averia(
         cliente_redis = conectar_redis()
         driver_neo4j = conectar_neo4j()
 
+        db = cliente_mongo["logistica_flota"]
+        original = db.viajes.find_one({"_id": id_viaje_averiado, "estado": "EN_CURSO"})
+        if (
+            original is None
+            or db.vehiculos.find_one({"_id": patente_reemplazo, "estado": "DISPONIBLE"})
+            is None
+            or db.conductores.find_one(
+                {"_id": conductor_reemplazo, "estado": "DISPONIBLE"}
+            )
+            is None
+        ):
+            return dict(
+                exito=False,
+                paso_fallido="VALIDACION",
+                detalle="Viaje no activo o recursos de reemplazo no disponibles",
+            )
         # =====================================================================
         # PASO 1: [Redis] Reserva atómica de recursos de reemplazo
         # =====================================================================
@@ -69,7 +84,7 @@ def reasignar_por_averia(
             cliente_redis,
             patente_reemplazo=patente_reemplazo,
             conductor_reemplazo=conductor_reemplazo,
-            token_saga=saga_id
+            token_saga=saga_id,
         )
 
         if not exito_reserva:
@@ -79,7 +94,7 @@ def reasignar_por_averia(
                 "paso_fallido": "REDIS_RESERVA",
                 "error": motivo_reserva,
                 "compensado": False,
-                "detalle": "La reserva no pudo realizarse; no hubo cambios en ningún motor."
+                "detalle": "La reserva no pudo realizarse; no hubo cambios en ningún motor.",
             }
 
         pasos_completados.append("REDIS_RESERVA")
@@ -96,7 +111,7 @@ def reasignar_por_averia(
                 id_viaje_averiado=id_viaje_averiado,
                 id_viaje_rescate=id_viaje_rescate,
                 id_punto_averia=id_punto_averia,
-                puntos_destino=puntos_destino
+                puntos_destino=puntos_destino,
             )
             pasos_completados.append("NEO4J_VINCULACION")
 
@@ -111,7 +126,7 @@ def reasignar_por_averia(
                 "paso_fallido": "NEO4J",
                 "error": str(err_neo4j),
                 "compensaciones": ["REDIS_RESERVA_LIBERADA"],
-                "detalle": "Fallo en Neo4j. Se liberó la reserva en Redis; ningún dato persistió en disco."
+                "detalle": "Fallo en Neo4j. Se liberó la reserva en Redis; ningún dato persistió en disco.",
             }
 
         # =====================================================================
@@ -128,15 +143,21 @@ def reasignar_por_averia(
                 patente_reemplazo=patente_reemplazo,
                 conductor_reemplazo=conductor_reemplazo,
                 id_punto_averia=id_punto_averia,
-                saga_id=saga_id
+                saga_id=saga_id,
+                ruta_rescate_id=res_neo4j["ruta_id"],
+                puntos_recorrido=res_neo4j["recorrido"],
             )
             pasos_completados.append("MONGO_REASIGNACION")
 
         except Exception as err_mongo:
             # ROLLBACK PASO 3: Compensar Neo4j y luego Redis en orden inverso
             compensar_rescate_neo4j(driver_neo4j, id_viaje_rescate, id_viaje_averiado)
-            compensar_reserva_redis(cliente_redis, patente_reemplazo, conductor_reemplazo, saga_id)
-            compensar_reasignacion_mongo(cliente_mongo, id_viaje_averiado, id_viaje_rescate, saga_id)
+            compensar_reserva_redis(
+                cliente_redis, patente_reemplazo, conductor_reemplazo, saga_id
+            )
+            compensar_reasignacion_mongo(
+                cliente_mongo, id_viaje_averiado, id_viaje_rescate, saga_id
+            )
 
             return {
                 "exito": False,
@@ -146,9 +167,9 @@ def reasignar_por_averia(
                 "compensaciones": [
                     "MONGO_REVERTIDO",
                     "NEO4J_DESVINCULADO",
-                    "REDIS_RESERVA_LIBERADA"
+                    "REDIS_RESERVA_LIBERADA",
                 ],
-                "detalle": "Fallo en MongoDB. Se revirtió el grafo en Neo4j y se liberó el camión en Redis. Paquetes seguros."
+                "detalle": "Fallo en MongoDB. Se revirtió el grafo en Neo4j y se liberó el camión en Redis. Paquetes seguros.",
             }
 
         # =====================================================================
@@ -163,7 +184,8 @@ def reasignar_por_averia(
                 patente_averiada=patente_averiada,
                 patente_reemplazo=patente_reemplazo,
                 id_viaje_rescate=id_viaje_rescate,
-                token_saga=saga_id
+                token_saga=saga_id,
+                conductor_reemplazo=conductor_reemplazo,
             )
             pasos_completados.append("REDIS_CONSOLIDACION")
 
@@ -173,7 +195,7 @@ def reasignar_por_averia(
                 "exito": True,
                 "saga_id": saga_id,
                 "alerta": f"Reasignación confirmada pero falló consolidación en Redis: {err_redis_final}",
-                "id_viaje_rescate": id_viaje_rescate
+                "id_viaje_rescate": id_viaje_rescate,
             }
 
         return {
@@ -186,7 +208,7 @@ def reasignar_por_averia(
             "conductor_reemplazo": conductor_reemplazo,
             "total_paquetes": res_mongo["total_paquetes"],
             "paquetes_reasignados": res_mongo["paquetes_reasignados"],
-            "pasos_completados": pasos_completados
+            "pasos_completados": pasos_completados,
         }
 
     finally:
@@ -205,4 +227,3 @@ def reasignar_por_averia(
                 driver_neo4j.close()
             except Exception:
                 pass
-

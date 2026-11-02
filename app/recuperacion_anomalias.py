@@ -17,7 +17,7 @@ from app.repositorio_alertas_redis import (
 )
 
 
-def reconciliar_anomalias() -> Dict[str, Any]:
+def reconciliar_anomalias(patentes=None) -> Dict[str, Any]:
     """
     Ejecuta el proceso de reconciliación entre Cassandra y Redis.
 
@@ -44,7 +44,14 @@ def reconciliar_anomalias() -> Dict[str, Any]:
         cliente_redis = conectar_redis()
 
         # 1. Cassandra -> Redis: Asegurar que toda alerta abierta en Cassandra exista en Redis
-        alertas_abiertas = obtener_alertas_abiertas_cassandra(sesion)
+        if patentes is None:
+            alertas_abiertas = obtener_alertas_abiertas_cassandra(sesion)
+        else:
+            alertas_abiertas = [
+                a
+                for p in patentes
+                for a in obtener_alertas_abiertas_cassandra(sesion, p)
+            ]
 
         for abierta in alertas_abiertas:
             patente = abierta["vehiculo_patente"]
@@ -61,61 +68,81 @@ def reconciliar_anomalias() -> Dict[str, Any]:
                 # Caso: Redis perdió la clave (reinicio / flush / fallo paso 3).
                 # Reconstruimos la clave en Redis desde la fuente de verdad.
                 pipe = cliente_redis.pipeline()
-                pipe.hset(clave, mapping={
-                    "alerta_id": alerta_id,
-                    "estado": "ACTIVE",
-                    "viaje_id": viaje_id,
-                    "dia": dia,
-                    "fecha_hora": fecha_hora or "",
-                    "primera_vez": fecha_hora or "",
-                    "ultima_vez": fecha_hora or "",
-                    "cantidad": "1"
-                })
+                pipe.hset(
+                    clave,
+                    mapping={
+                        "alerta_id": alerta_id,
+                        "estado": "ACTIVE",
+                        "viaje_id": viaje_id,
+                        "dia": dia,
+                        "fecha_hora": fecha_hora or "",
+                        "primera_vez": fecha_hora or "",
+                        "ultima_vez": fecha_hora or "",
+                        "cantidad": "1",
+                    },
+                )
                 pipe.expire(clave, ttl_activo)
                 pipe.execute()
 
-                reconstruidas_en_redis.append({
-                    "patente": patente,
-                    "tipo": tipo,
-                    "alerta_id": alerta_id,
-                    "motivo": "Clave ausente en Redis; restaurada desde Cassandra"
-                })
+                reconstruidas_en_redis.append(
+                    {
+                        "patente": patente,
+                        "tipo": tipo,
+                        "alerta_id": alerta_id,
+                        "motivo": "Clave ausente en Redis; restaurada desde Cassandra",
+                    }
+                )
 
-            elif datos_redis.get("estado") == "PENDING" and datos_redis.get("alerta_id") == alerta_id:
+            elif (
+                datos_redis.get("estado") == "PENDING"
+                and datos_redis.get("alerta_id") == alerta_id
+            ):
                 # Caso: Quedó en PENDING porque el paso 3 falló, pero Cassandra SÍ lo persistió.
                 # Promovemos a ACTIVE.
-                confirmar_anomalia_redis(cliente_redis, patente, tipo, alerta_id, ttl_activo=ttl_activo)
-                confirmadas_en_redis.append({
-                    "patente": patente,
-                    "tipo": tipo,
-                    "alerta_id": alerta_id,
-                    "motivo": "Promovida de PENDING a ACTIVE en Redis"
-                })
+                confirmar_anomalia_redis(
+                    cliente_redis, patente, tipo, alerta_id, ttl_activo=ttl_activo
+                )
+                confirmadas_en_redis.append(
+                    {
+                        "patente": patente,
+                        "tipo": tipo,
+                        "alerta_id": alerta_id,
+                        "motivo": "Promovida de PENDING a ACTIVE en Redis",
+                    }
+                )
 
         # 2. Redis -> Cassandra: Buscar claves PENDING en Redis que NO existan en Cassandra (huérfanas)
         patron = "alerta:activa:*"
         for clave in cliente_redis.scan_iter(patron):
+            if patentes is not None and not any(
+                clave.startswith(f"alerta:activa:{p}:") for p in patentes
+            ):
+                continue
             estado = cliente_redis.hget(clave, "estado")
             if estado == "PENDING":
                 alerta_id_redis = cliente_redis.hget(clave, "alerta_id")
                 # Verificar si existe en la lista de alertas abiertas de Cassandra
-                existe_en_cassandra = any(a["alerta_id"] == alerta_id_redis for a in alertas_abiertas)
+                existe_en_cassandra = any(
+                    a["alerta_id"] == alerta_id_redis for a in alertas_abiertas
+                )
 
                 if not existe_en_cassandra:
                     # Es una clave huérfana de un proceso interrumpido antes del paso 2.
                     cliente_redis.delete(clave)
-                    huerfanas_limpiadas.append({
-                        "clave": clave,
-                        "alerta_id": alerta_id_redis,
-                        "motivo": "Claim PENDING sin persistencia en Cassandra eliminado"
-                    })
+                    huerfanas_limpiadas.append(
+                        {
+                            "clave": clave,
+                            "alerta_id": alerta_id_redis,
+                            "motivo": "Claim PENDING sin persistencia en Cassandra eliminado",
+                        }
+                    )
 
         return {
             "exito": True,
             "total_alertas_abiertas_cassandra": len(alertas_abiertas),
             "reconstruidas_en_redis": reconstruidas_en_redis,
             "confirmadas_en_redis": confirmadas_en_redis,
-            "huerfanas_limpiadas": huerfanas_limpiadas
+            "huerfanas_limpiadas": huerfanas_limpiadas,
         }
 
     finally:
@@ -129,4 +156,3 @@ def reconciliar_anomalias() -> Dict[str, Any]:
                 cliente_redis.close()
             except Exception:
                 pass
-
