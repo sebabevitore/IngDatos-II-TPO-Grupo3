@@ -7,3 +7,16 @@
 # Archivos temporales de Python
 __pycache__/
 *.pyc
+
+# Archivos del sistema y exportaciones de revisión
+.DS_Store
+repomix-output.*
+
+# Salidas nuevas de demos y revisiones locales.
+# La evidencia de entrega ya versionada se conserva.
+/resultados_menus/
+/simulacion_50/
+/simulaciones_telemetria/
+/evidencias/correcciones/*.json
+/evidencias/revision-*/
+/evidencias/validacion-*/
