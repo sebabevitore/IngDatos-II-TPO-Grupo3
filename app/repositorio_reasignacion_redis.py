@@ -22,12 +22,12 @@ def reservar_reemplazo_redis(
     patente_reemplazo: str,
     conductor_reemplazo: str,
     token_saga: str,
-    ttl_segundos: int = 120
+    ttl_segundos: int = 120,
 ) -> Tuple[bool, str]:
     """
     Intenta reservar atómicamente el vehículo y conductor de reemplazo.
     Evita condiciones de carrera entre coordinadores concurrentes.
-    
+
     Devuelve:
         (True, "OK"): Ambos recursos reservados exitosamente.
         (False, motivo): Alguno de los recursos ya estaba ocupado o en avería.
@@ -39,25 +39,25 @@ def reservar_reemplazo_redis(
     clave_estado_veh = f"vehiculo:{patente_reemplazo.strip()}:estado"
     estado_actual = cliente.hget(clave_estado_veh, "estado")
     if estado_actual in ["AVERIADO", "EN_MANTENIMIENTO"]:
-        return False, f"El vehículo {patente_reemplazo} no está operativo (estado actual: {estado_actual})"
+        return (
+            False,
+            f"El vehículo {patente_reemplazo} no está operativo (estado actual: {estado_actual})",
+        )
 
     # 2. Adquirir lock atómico del vehículo
     vehiculo_adquirido = cliente.set(
-        clave_vehiculo,
-        token_saga,
-        nx=True,
-        ex=ttl_segundos
+        clave_vehiculo, token_saga, nx=True, ex=ttl_segundos
     )
     if not vehiculo_adquirido:
-        return False, f"El vehículo {patente_reemplazo} ya está reservado o asignado por otra operación"
+        return (
+            False,
+            f"El vehículo {patente_reemplazo} ya está reservado o asignado por otra operación",
+        )
 
     # 3. Adquirir lock atómico del conductor
     try:
         conductor_adquirido = cliente.set(
-            clave_conductor,
-            token_saga,
-            nx=True,
-            ex=ttl_segundos
+            clave_conductor, token_saga, nx=True, ex=ttl_segundos
         )
     except Exception:
         # Rollback inmediato del vehículo si falló la llamada
@@ -67,7 +67,10 @@ def reservar_reemplazo_redis(
     if not conductor_adquirido:
         # Rollback: liberar el vehículo porque no conseguimos al chofer
         compensar_reserva_redis(cliente, patente_reemplazo, None, token_saga)
-        return False, f"El conductor {conductor_reemplazo} ya está reservado por otra operación"
+        return (
+            False,
+            f"El conductor {conductor_reemplazo} ya está reservado por otra operación",
+        )
 
     return True, "OK"
 
@@ -76,7 +79,7 @@ def compensar_reserva_redis(
     cliente: redis.Redis,
     patente_reemplazo: Optional[str],
     conductor_reemplazo: Optional[str],
-    token_saga: str
+    token_saga: str,
 ):
     """
     Acción de compensación (Rollback): Libera los locks temporales adquiridos
@@ -92,41 +95,38 @@ def compensar_reserva_redis(
 
 
 def consolidar_estados_redis(
-    cliente: redis.Redis,
-    patente_averiada: str,
-    patente_reemplazo: str,
-    id_viaje_rescate: str,
-    token_saga: str
+    cliente,
+    patente_averiada,
+    patente_reemplazo,
+    id_viaje_rescate,
+    token_saga,
+    conductor_reemplazo=None,
 ):
+    """Las reservas del rescate permanecen mientras el viaje está activo."""
+    if not conductor_reemplazo:
+        raise ValueError("Falta conductor del rescate")
+    script = """
+    if redis.call('GET',KEYS[1]) ~= ARGV[1] or redis.call('GET',KEYS[2]) ~= ARGV[1] then return 0 end
+    redis.call('PERSIST',KEYS[1]); redis.call('PERSIST',KEYS[2])
+    redis.call('HSET',KEYS[3],'estado','AVERIADO','motivo','AVERIA_MECANICA_EN_RUTA')
+    redis.call('HSET',KEYS[4],'estado','EN_VIAJE','viaje_id',ARGV[2])
+    return 1
     """
-    Paso final: Consolida los estados operativos definitivos en Redis
-    y retira las reservas temporales.
-    """
-    pipe = cliente.pipeline()
-
-    # 1. Vehículo averiado pasa a estado AVERIADO
-    clave_estado_averiado = f"vehiculo:{patente_averiada.strip()}:estado"
-    pipe.hset(clave_estado_averiado, mapping={
-        "estado": "AVERIADO",
-        "motivo": "AVERIA_MECANICA_EN_RUTA"
-    })
-
-    # 2. Vehículo de reemplazo pasa a estado EN_VIAJE vinculado al viaje de rescate
-    clave_estado_reemplazo = f"vehiculo:{patente_reemplazo.strip()}:estado"
-    pipe.hset(clave_estado_reemplazo, mapping={
-        "estado": "EN_VIAJE",
-        "viaje_id": id_viaje_rescate
-    })
-
-    # 3. Liberar locks transitorios de reserva
-    clave_reserva_veh = f"reserva:vehiculo:{patente_reemplazo.strip()}"
-    pipe.delete(clave_reserva_veh)
-
-    pipe.execute()
+    ok = cliente.eval(
+        script,
+        4,
+        f"reserva:vehiculo:{patente_reemplazo}",
+        f"reserva:conductor:{conductor_reemplazo}",
+        f"vehiculo:{patente_averiada}:estado",
+        f"vehiculo:{patente_reemplazo}:estado",
+        token_saga,
+        id_viaje_rescate,
+    )
+    if ok != 1:
+        raise RuntimeError("Se perdió la reserva antes de confirmar el rescate")
 
 
 def obtener_estado_vehiculo_redis(cliente: redis.Redis, patente: str) -> Dict[str, str]:
     """Recupera el hash de estado de un vehículo."""
     clave = f"vehiculo:{patente.strip()}:estado"
     return cliente.hgetall(clave)
-

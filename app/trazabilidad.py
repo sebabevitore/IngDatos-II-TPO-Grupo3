@@ -1,4 +1,3 @@
-
 from datetime import datetime, timedelta, timezone
 
 from app.conexiones import (
@@ -72,16 +71,12 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
     """
 
     if not isinstance(codigo_seguimiento, str):
-        raise ValueError(
-            "El codigo de seguimiento debe ser un texto"
-        )
+        raise ValueError("El codigo de seguimiento debe ser un texto")
 
     codigo_seguimiento = codigo_seguimiento.strip()
 
     if not codigo_seguimiento:
-        raise ValueError(
-            "El codigo de seguimiento no puede estar vacio"
-        )
+        raise ValueError("El codigo de seguimiento no puede estar vacio")
 
     cliente_mongo = None
     cluster_cassandra = None
@@ -95,8 +90,7 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
         cliente_mongo = conectar_mongodb()
 
         resultado_mongo = consultar_trazabilidad_mongo(
-            cliente_mongo,
-            codigo_seguimiento
+            cliente_mongo, codigo_seguimiento
         )
 
         if resultado_mongo is None:
@@ -106,13 +100,18 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
                 "error": "Paquete no encontrado en MongoDB",
             }
 
+        if resultado_mongo.get("inconsistencias"):
+            return dict(
+                exito=False,
+                codigo_seguimiento=codigo_seguimiento,
+                error="; ".join(resultado_mongo["inconsistencias"]),
+            )
+
         # ==========================================
         # PASO 2: CONECTAR CASSANDRA Y NEO4J
         # ==========================================
 
-        cluster_cassandra, sesion_cassandra = (
-            conectar_cassandra()
-        )
+        cluster_cassandra, sesion_cassandra = conectar_cassandra()
 
         driver_neo4j = conectar_neo4j()
 
@@ -129,16 +128,11 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
             asignacion = viaje["asignacion"]
 
             # Obtener las fechas reales de la asignacion.
-            inicio, fin = obtener_periodo_asignacion(
-                asignacion
-            )
+            inicio, fin = obtener_periodo_asignacion(asignacion)
 
             # Evitar consultar fechas futuras.
             ahora = datetime.now(timezone.utc)
-            fin_consulta = min(
-                fin if fin is not None else ahora,
-                ahora
-            )
+            fin_consulta = min(fin if fin is not None else ahora, ahora)
 
             posiciones = []
             alertas = []
@@ -149,49 +143,29 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
 
             if inicio <= fin_consulta:
 
-                for dia in obtener_dias(
-                    inicio.date(),
-                    fin_consulta.date()
-                ):
+                for dia in obtener_dias(inicio.date(), fin_consulta.date()):
 
-                    posiciones_dia = (
-                        consultar_telemetria_viaje(
-                            sesion_cassandra,
-                            viaje_id,
-                            dia
-                        )
+                    posiciones_dia = consultar_telemetria_viaje(
+                        sesion_cassandra, viaje_id, dia
                     )
 
                     alertas_dia = consultar_alertas_viaje(
-                        sesion_cassandra,
-                        viaje_id,
-                        dia
+                        sesion_cassandra, viaje_id, dia
                     )
 
                     posiciones.extend(posiciones_dia)
                     alertas.extend(alertas_dia)
 
             # Filtrar eventos por periodo de asignacion.
-            posiciones = filtrar_eventos_por_periodo(
-                posiciones,
-                inicio,
-                fin_consulta
-            )
+            posiciones = filtrar_eventos_por_periodo(posiciones, inicio, fin_consulta)
 
-            alertas = filtrar_eventos_por_periodo(
-                alertas,
-                inicio,
-                fin_consulta
-            )
+            alertas = filtrar_eventos_por_periodo(alertas, inicio, fin_consulta)
 
             # ======================================
             # PASO 5: CONSULTAR NEO4J
             # ======================================
 
-            recorrido = obtener_recorrido_viaje(
-                driver_neo4j,
-                viaje_id
-            )
+            recorrido = obtener_recorrido_viaje(driver_neo4j, viaje_id)
 
             # ======================================
             # PASO 6: INTEGRAR RESULTADOS
@@ -199,44 +173,21 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
 
             viaje_completo = {
                 "viaje_id": viaje_id,
-
                 "vehiculo": viaje["vehiculo"],
-
                 "conductor": viaje["conductor"],
-
                 "ruta": viaje["ruta"],
-
                 "estado_viaje": viaje["estado"],
-
                 "periodo_asignacion": {
                     "inicio": inicio.isoformat(),
-                    "fin": (
-                        fin.isoformat()
-                        if fin is not None
-                        else None
-                    ),
+                    "fin": (fin.isoformat() if fin is not None else None),
                 },
-
-                "estado_asignacion": asignacion.get(
-                    "estado"
-                ),
-
-                "punto_inicio": asignacion.get(
-                    "punto_inicio_id"
-                ),
-
-                "punto_fin": asignacion.get(
-                    "punto_fin_id"
-                ),
-
+                "estado_asignacion": asignacion.get("estado"),
+                "punto_inicio": asignacion.get("punto_inicio_id"),
+                "punto_fin": asignacion.get("punto_fin_id"),
                 "recorrido": recorrido,
-
                 "posiciones_gps": posiciones,
-
                 "alertas": alertas,
-
                 "total_posiciones": len(posiciones),
-
                 "total_alertas": len(alertas),
             }
 
@@ -246,19 +197,11 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
         # PASO 7: ORDENAR Y CONSOLIDAR
         # ==========================================
 
-        viajes_completos.sort(
-            key=lambda v: v["periodo_asignacion"]["inicio"]
-        )
+        viajes_completos.sort(key=lambda v: v["periodo_asignacion"]["inicio"])
 
-        total_posiciones = sum(
-            viaje["total_posiciones"]
-            for viaje in viajes_completos
-        )
+        total_posiciones = sum(viaje["total_posiciones"] for viaje in viajes_completos)
 
-        total_alertas = sum(
-            viaje["total_alertas"]
-            for viaje in viajes_completos
-        )
+        total_alertas = sum(viaje["total_alertas"] for viaje in viajes_completos)
 
         # ==========================================
         # RESULTADO FINAL DEL CU-08
@@ -266,19 +209,11 @@ def consultar_trazabilidad_completa(codigo_seguimiento):
 
         return {
             "exito": True,
-
             "codigo_seguimiento": codigo_seguimiento,
-
-            "estado_paquete": resultado_mongo[
-                "paquete"
-            ].get("estado"),
-
+            "estado_paquete": resultado_mongo["paquete"].get("estado"),
             "total_viajes": len(viajes_completos),
-
             "total_posiciones_gps": total_posiciones,
-
             "total_alertas": total_alertas,
-
             "viajes": viajes_completos,
         }
 

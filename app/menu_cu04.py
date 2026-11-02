@@ -1,88 +1,38 @@
-import os
+"""Menú CU-04. Cada demostración usa datos nuevos y conserva sus resultados."""
+
 import sys
-from datetime import datetime, timezone
-from uuid import uuid4
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Compatibilidad con ejecución directa desde el editor; -m sigue siendo el inicio recomendado.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.telemetria import registrar_telemetria
-from app.eta import calcular_eta_y_desvio
-from app.conexiones import conectar_neo4j
-from app.probar_eta_neo4j import cargar_datos_de_prueba
-
-VIAJE_ID = "VIAJE-PRUEBA-ETA"
-PATENTE = "AA111AA"
-
-
-def _registrar_posicion(latitud, longitud):
-    ok, resultado = registrar_telemetria({
-        "id_evento": str(uuid4()),
-        "vehiculo_patente": PATENTE,
-        "fecha_hora": datetime.now(timezone.utc).isoformat(),
-        "latitud": latitud,
-        "longitud": longitud,
-        "velocidad": 40,
-        "estado_vehiculo": "EN_RUTA",
-        "viaje_id": VIAJE_ID,
-    })
-    print("Telemetría registrada:", ok, resultado.get("motivo_estado_redis", resultado))
+from app import demo_escenarios as escenarios
+from app.menu_comun import ejecutar_menu
 
 
 def demo_sin_desvio():
-    print("\n--- 1. ESCENARIO: Vehículo sobre la ruta planificada (sin desvío) ---")
-    _registrar_posicion(-34.601, -58.401)  # muy cerca de P-1
-    resultado = calcular_eta_y_desvio(VIAJE_ID)
-    print("Resultado:", resultado)
+    return escenarios.cu04(1)
 
 
 def demo_con_desvio():
-    print("\n--- 2. ESCENARIO: Vehículo alejado de la ruta planificada (con desvío) ---")
-    _registrar_posicion(-34.605, -58.405)  # 720m de P-1, supera el umbral
-    resultado = calcular_eta_y_desvio(VIAJE_ID)
-    print("Resultado:", resultado)
+    return escenarios.cu04(2)
 
 
 def demo_sin_historico():
-    print("\n--- 3. ESCENARIO: Tramo sin historial en Cassandra (usa lo planificado) ---")
-    _registrar_posicion(-34.61, -58.42)  # cerca de P-2, yendo hacia P-3 (T-2-3, sin historial cargado)
-    resultado = calcular_eta_y_desvio(VIAJE_ID)
-    print("Resultado:", resultado)
+    return escenarios.cu04(3)
 
 
 def menu():
-    driver = conectar_neo4j()
-    try:
-        cargar_datos_de_prueba(driver)
-    finally:
-        driver.close()
-    if len(sys.argv) > 1:
-        arg = sys.argv[1].lower()
-        if arg in ["--all", "-a", "all"]:
-            demo_sin_desvio()
-            demo_con_desvio()
-            demo_sin_historico()
-            return
-    while True:
-        print("\n=============================================================")
-        print("   TPO - CU-04: ETA y desvíos (Redis + Neo4j + Cassandra)")
-        print("=============================================================")
-        print("1. Escenario sin desvío")
-        print("2. Escenario con desvío")
-        print("3. Escenario sin historial en Cassandra (usa tiempo planificado)")
-        print("4. Salir")
-        opc = input("\nSeleccione una opción (1-4): ").strip()
-
-        if opc == "1":
-            demo_sin_desvio()
-        elif opc == "2":
-            demo_con_desvio()
-        elif opc == "3":
-            demo_sin_historico()
-        elif opc == "4":
-            print("Saliendo...")
-            break
-        else:
-            print("Opción inválida.")
+    return ejecutar_menu(
+        "CU-04",
+        [
+            ("Sin desvío, con históricos reales de tramo", demo_sin_desvio),
+            ("Con desvío", demo_con_desvio),
+            ("Sin histórico: usar tiempo planificado", demo_sin_historico),
+        ],
+        4,
+    )
 
 
 if __name__ == "__main__":

@@ -16,45 +16,42 @@ def asegurar_paquete_para_entrega_mongo(
     cliente_mongo,
     paquete_codigo: str,
     viaje_id: str,
-    punto_entrega_id: str = "PUNTO-NORTE"
+    punto_entrega_id: str = "PUNTO-NORTE",
 ):
     """Inicializa un paquete en estado EN_TRANSITO con su asignación ACTIVA de prueba."""
     db = _obtener_db(cliente_mongo)
     ahora = datetime.now(timezone.utc)
 
-    # 1. Asegurar paquete
-    db.paquetes.update_one(
-        {"_id": paquete_codigo},
-        {"$set": {
-            "_id": paquete_codigo,
-            "codigo_seguimiento": paquete_codigo,
-            "estado": "EN_TRANSITO",
-            "punto_entrega_id": punto_entrega_id,
-            "fecha_registro": ahora
-        }, "$unset": {
-            "fecha_entrega": "",
-            "receptor": ""
-        }},
-        upsert=True
+    if db.paquetes.find_one({"_id": paquete_codigo}) is not None:
+        return  # No volver a EN_TRANSITO un paquete ya entregado.
+    if db.viajes.find_one({"_id": viaje_id}) is None:
+        raise ValueError("La fixture de entrega requiere un viaje existente")
+    db.paquetes.insert_one(
+        dict(
+            _id=paquete_codigo,
+            codigo_seguimiento=paquete_codigo,
+            estado="EN_TRANSITO",
+            punto_entrega_id=punto_entrega_id,
+            fecha_registro=ahora,
+        )
     )
-
-    # 2. Asegurar asignación activa
-    db.asignaciones.delete_many({"paquete_codigo": paquete_codigo})
-    db.asignaciones.insert_one({
-        "_id": f"ASIG-{viaje_id}-{paquete_codigo}",
-        "viaje_id": viaje_id,
-        "paquete_codigo": paquete_codigo,
-        "punto_inicio_id": "PUNTO-CENTRO",
-        "punto_fin_id": punto_entrega_id,
-        "estado": "ACTIVA",
-        "fecha_asignacion": ahora
-    })
+    db.asignaciones.insert_one(
+        dict(
+            _id=f"ASIG-{viaje_id}-{paquete_codigo}",
+            viaje_id=viaje_id,
+            paquete_codigo=paquete_codigo,
+            punto_inicio_id=db.viajes.find_one({"_id": viaje_id}).get(
+                "paradas", [{"punto_entrega_id": punto_entrega_id}]
+            )[0]["punto_entrega_id"],
+            punto_fin_id=punto_entrega_id,
+            estado="ACTIVA",
+            fecha_asignacion=ahora,
+        )
+    )
 
 
 def actualizar_entrega_mongo(
-    cliente_mongo,
-    datos_entrega: Dict[str, Any],
-    saga_id: str
+    cliente_mongo, datos_entrega: Dict[str, Any], saga_id: str
 ) -> Dict[str, Any]:
     """
     Paso 3 del Saga:
@@ -72,62 +69,64 @@ def actualizar_entrega_mongo(
     receptor_info = {
         "nombre": datos_entrega.get("receptor_nombre", "Consignatario"),
         "dni": datos_entrega.get("receptor_dni", "00000000"),
-        "vinculo": datos_entrega.get("receptor_vinculo", "TITULAR")
+        "vinculo": datos_entrega.get("receptor_vinculo", "TITULAR"),
     }
 
     # 1. Log en operaciones
-    db.operaciones.insert_one({
-        "_id": saga_id,
-        "tipo": "CONFIRMACION_ENTREGA",
-        "paquete_codigo": paquete_codigo,
-        "viaje_id": viaje_id,
-        "estado": "PROCESANDO",
-        "fecha_inicio": ahora
-    })
+    db.operaciones.insert_one(
+        {
+            "_id": saga_id,
+            "tipo": "CONFIRMACION_ENTREGA",
+            "paquete_codigo": paquete_codigo,
+            "viaje_id": viaje_id,
+            "estado": "PROCESANDO",
+            "fecha_inicio": ahora,
+        }
+    )
 
     # 2. Actualizar Paquete (Solo si no está entregado)
     res_paq = db.paquetes.update_one(
         {"_id": paquete_codigo, "estado": {"$ne": "ENTREGADO"}},
-        {"$set": {
-            "estado": "ENTREGADO",
-            "fecha_entrega": ahora,
-            "receptor": receptor_info
-        }}
+        {
+            "$set": {
+                "estado": "ENTREGADO",
+                "fecha_entrega": ahora,
+                "receptor": receptor_info,
+            }
+        },
     )
     if res_paq.matched_count == 0:
-        raise RuntimeError(f"El paquete {paquete_codigo} ya se encuentra ENTREGADO o no existe en MongoDB.")
+        raise RuntimeError(
+            f"El paquete {paquete_codigo} ya se encuentra ENTREGADO o no existe en MongoDB."
+        )
 
     # 3. Cerrar Asignación (ACTIVA -> COMPLETADA)
     res_asig = db.asignaciones.update_one(
         {"paquete_codigo": paquete_codigo, "viaje_id": viaje_id, "estado": "ACTIVA"},
-        {"$set": {
-            "estado": "COMPLETADA",
-            "fecha_fin": ahora,
-            "entregado_a": receptor_info
-        }}
+        {
+            "$set": {
+                "estado": "COMPLETADA",
+                "fecha_fin": ahora,
+                "entregado_a": receptor_info,
+            }
+        },
     )
 
     # 4. Consolidar en operaciones
     db.operaciones.update_one(
         {"_id": saga_id},
-        {"$set": {
-            "estado": "COMPLETADO",
-            "fecha_fin": datetime.now(timezone.utc)
-        }}
+        {"$set": {"estado": "COMPLETADO", "fecha_fin": datetime.now(timezone.utc)}},
     )
 
     return {
         "paquete_codigo": paquete_codigo,
         "estado_paquete": "ENTREGADO",
-        "asignacion_cerrada": res_asig.modified_count == 1
+        "asignacion_cerrada": res_asig.modified_count == 1,
     }
 
 
 def compensar_entrega_mongo(
-    cliente_mongo,
-    paquete_codigo: str,
-    viaje_id: str,
-    saga_id: str
+    cliente_mongo, paquete_codigo: str, viaje_id: str, saga_id: str
 ):
     """
     Acción de compensación (Rollback en MongoDB):
@@ -139,27 +138,38 @@ def compensar_entrega_mongo(
     # Restaurar paquete
     db.paquetes.update_one(
         {"_id": paquete_codigo},
-        {"$set": {"estado": "EN_TRANSITO"}, "$unset": {"fecha_entrega": "", "receptor": ""}}
+        {
+            "$set": {"estado": "EN_TRANSITO"},
+            "$unset": {"fecha_entrega": "", "receptor": ""},
+        },
     )
 
     # Restaurar asignación
     db.asignaciones.update_one(
-        {"paquete_codigo": paquete_codigo, "viaje_id": viaje_id, "estado": "COMPLETADA"},
-        {"$set": {"estado": "ACTIVA"}, "$unset": {"fecha_fin": "", "entregado_a": ""}}
+        {
+            "paquete_codigo": paquete_codigo,
+            "viaje_id": viaje_id,
+            "estado": "COMPLETADA",
+        },
+        {"$set": {"estado": "ACTIVA"}, "$unset": {"fecha_fin": "", "entregado_a": ""}},
     )
 
     # Registrar en operaciones
     db.operaciones.update_one(
         {"_id": saga_id},
-        {"$set": {
-            "estado": "ROLLBACK_COMPENSADO",
-            "fecha_compensacion": datetime.now(timezone.utc)
-        }},
-        upsert=True
+        {
+            "$set": {
+                "estado": "ROLLBACK_COMPENSADO",
+                "fecha_compensacion": datetime.now(timezone.utc),
+            }
+        },
+        upsert=True,
     )
 
 
-def consultar_paquete_mongo(cliente_mongo, paquete_codigo: str) -> Optional[Dict[str, Any]]:
+def consultar_paquete_mongo(
+    cliente_mongo, paquete_codigo: str
+) -> Optional[Dict[str, Any]]:
     """Consulta los datos y estado del paquete en MongoDB."""
     db = _obtener_db(cliente_mongo)
     return db.paquetes.find_one({"_id": paquete_codigo})

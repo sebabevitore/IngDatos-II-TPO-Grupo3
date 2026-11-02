@@ -38,10 +38,7 @@ end
 
 
 def bloquear_entrega_paquete_redis(
-    cliente: redis.Redis,
-    paquete_codigo: str,
-    token_saga: str,
-    ttl_segundos: int = 30
+    cliente: redis.Redis, paquete_codigo: str, token_saga: str, ttl_segundos: int = 30
 ) -> Tuple[bool, str]:
     """
     Adquiere un lock atómico temporal sobre el paquete (SET NX EX)
@@ -53,12 +50,7 @@ def bloquear_entrega_paquete_redis(
     clave_lock = f"lock:entrega:paquete:{paq}"
 
     resultado = cliente.eval(
-        SCRIPT_BLOQUEAR_ENTREGA,
-        2,
-        clave_paquete,
-        clave_lock,
-        token_saga,
-        ttl_segundos
+        SCRIPT_BLOQUEAR_ENTREGA, 2, clave_paquete, clave_lock, token_saga, ttl_segundos
     )
 
     if resultado == -1:
@@ -70,9 +62,7 @@ def bloquear_entrega_paquete_redis(
 
 
 def liberar_bloqueo_entrega_redis(
-    cliente: redis.Redis,
-    paquete_codigo: str,
-    token_saga: str
+    cliente: redis.Redis, paquete_codigo: str, token_saga: str
 ) -> bool:
     """
     Acción de compensación (Rollback): Libera el lock temporal si la operación
@@ -84,10 +74,7 @@ def liberar_bloqueo_entrega_redis(
 
 
 def consolidar_entrega_redis(
-    cliente: redis.Redis,
-    viaje_id: str,
-    paquete_codigo: str,
-    token_saga: str
+    cliente: redis.Redis, viaje_id: str, paquete_codigo: str, token_saga: str
 ):
     """
     Paso final en Redis:
@@ -95,24 +82,30 @@ def consolidar_entrega_redis(
     2. Actualiza el estado del paquete en caché a 'ENTREGADO'.
     3. Libera el lock temporal de entrega.
     """
-    pipe = cliente.pipeline()
-
-    # Contador operativo del viaje
-    clave_progreso = f"viaje:{viaje_id.strip()}:progreso"
-    pipe.hincrby(clave_progreso, "entregas_completadas", 1)
-
-    # Estado rápido del paquete
-    clave_paquete = f"paquete:{paquete_codigo.strip()}:estado"
-    pipe.hset(clave_paquete, mapping={
-        "estado": "ENTREGADO",
-        "viaje_id": viaje_id
-    })
-
-    # Liberar lock de entrega
-    clave_lock = f"lock:entrega:paquete:{paquete_codigo.strip()}"
-    pipe.delete(clave_lock)
-
-    pipe.execute()
+    # Confirmación y métricas en la misma operación; no borrar un lock ajeno.
+    script = """
+    if redis.call('GET',KEYS[1]) ~= ARGV[1] then return 0 end
+    if redis.call('HGET',KEYS[2],'estado') ~= 'ENTREGADO' then
+      redis.call('HINCRBY',KEYS[3],'entregas_completadas',1)
+      local pendientes=tonumber(redis.call('HGET',KEYS[3],'entregas_pendientes') or '0')
+      if pendientes > 0 then redis.call('HINCRBY',KEYS[3],'entregas_pendientes',-1) end
+      redis.call('HSET',KEYS[2],'estado','ENTREGADO','viaje_id',ARGV[2])
+    end
+    redis.call('DEL',KEYS[1]); return 1
+    """
+    ok = cliente.eval(
+        script,
+        3,
+        f"lock:entrega:paquete:{paquete_codigo.strip()}",
+        f"paquete:{paquete_codigo.strip()}:estado",
+        f"viaje:{viaje_id.strip()}:progreso",
+        token_saga,
+        viaje_id,
+    )
+    if ok != 1:
+        raise RuntimeError(
+            "No se conserva el lock de entrega; requiere reconciliar las métricas"
+        )
 
 
 def obtener_progreso_viaje_redis(cliente: redis.Redis, viaje_id: str) -> Dict[str, str]:

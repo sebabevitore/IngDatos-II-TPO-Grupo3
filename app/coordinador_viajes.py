@@ -1,122 +1,265 @@
+"""CU01 persistente: reservas, recorrido y asignaciones, con compensación explícita."""
+
+from datetime import datetime, timezone
 from uuid import uuid4
-
 from app.viajes import validar_viaje
-from app.reservas import (
-    reservar_recursos,
-    liberar_recurso,
-    confirmar_recurso
-)
-from app.repositorio_viajes import (
-    registrar_viaje,
-    eliminar_viaje
-)
-from app.repositorio_rutas_neo4j import (
-    vincular_viaje_ruta_neo4j,
-    compensar_viaje_neo4j
-)
+from app.reservas import reservar_recursos, liberar_recurso, confirmar_recurso
+from app.repositorio_viajes import registrar_viaje
+from app.repositorio_rutas_neo4j import vincular_viaje_ruta_neo4j, compensar_viaje_neo4j
 
 
-def planificar_viaje(cliente_redis, coleccion_mongo, datos, driver_neo4j=None):
-    """
-    Orquestador Saga para el Caso de Uso 1 (MongoDB + Redis + Neo4j).
-    
-    Flujo de ejecución justificado:
-      1. [Redis] Reserva atómica temporal de vehículo y chofer (lock en memoria con TTL).
-      2. [Neo4j] Validación y vinculación del viaje a su ruta en el grafo vial.
-      3. [MongoDB] Registro del viaje y documentos de negocio.
-      4. [Redis] Confirmación definitiva de las reservas (quita expiración temporal).
-      
-    Manejo de compensaciones (Rollback):
-      - Si falla Neo4j: Se liberan las reservas en Redis.
-      - Si falla MongoDB: Se elimina el viaje de Neo4j y se liberan las reservas en Redis.
-      - Si falla la confirmación final de Redis: Se deshace MongoDB, se deshace Neo4j y se liberan los locks.
-    """
+def planificar_viaje(
+    cliente_redis, coleccion_mongo, datos, driver_neo4j=None, inyector=None
+):
     valido, mensaje = validar_viaje(datos)
-
     if not valido:
         return False, mensaje
+    if driver_neo4j is None:
+        return False, "CU01 requiere Neo4j para validar el recorrido"
+    if coleccion_mongo.database.name != "logistica_flota":
+        return False, "Los viajes deben registrarse en logistica_flota.viajes"
+    db = coleccion_mongo.database
+    viaje = str(uuid4())
+    token = None
+    locks = []
 
-    # 1. [Redis] Reservar recursos temporalmente
-    reservado, resultado = reservar_recursos(
-        cliente_redis,
-        datos["id_vehiculo"],
-        datos["id_conductor"]
-    )
+    def exigir(ok, msg):
+        if not ok:
+            raise RuntimeError(msg)
 
-    if not reservado:
-        return False, resultado
-
-    token = resultado
-    clave_vehiculo = f"reserva:vehiculo:{datos['id_vehiculo']}"
-    clave_conductor = f"reserva:conductor:{datos['id_conductor']}"
-
-    # Identificador compartido del viaje para todos los motores
-    id_viaje = str(uuid4())
-    neo4j_vinculado = False
-    mongo_registrado = False
+    def comprobar_maestros():
+        exigir(
+            db.vehiculos.find_one({"_id": datos["id_vehiculo"], "estado": "DISPONIBLE"})
+            is not None,
+            "Vehículo no disponible",
+        )
+        exigir(
+            db.conductores.find_one(
+                {"_id": datos["id_conductor"], "estado": "DISPONIBLE"}
+            )
+            is not None,
+            "Conductor no disponible",
+        )
+        abiertos = {
+            "estado": {
+                "$nin": ["FINALIZADO", "CANCELADO", "ANULADO", "INTERRUMPIDO_AVERIA"]
+            },
+            "$or": [
+                {"vehiculo_patente": datos["id_vehiculo"]},
+                {"id_vehiculo": datos["id_vehiculo"]},
+                {"conductor_id": datos["id_conductor"]},
+                {"id_conductor": datos["id_conductor"]},
+            ],
+        }
+        exigir(
+            db.viajes.count_documents(abiertos) == 0,
+            "El vehículo o conductor tiene un viaje abierto",
+        )
+        for codigo in datos["paquetes"]:
+            p = db.paquetes.find_one({"_id": codigo, "estado": "PENDIENTE"})
+            exigir(p is not None, f"Paquete no pendiente: {codigo}")
+            exigir(
+                p["punto_entrega_id"] in puntos,
+                "El destino del paquete no pertenece a la ruta",
+            )
+            exigir(
+                db.asignaciones.count_documents(
+                    {"paquete_codigo": codigo, "estado": "ACTIVA"}
+                )
+                == 0,
+                "Paquete ya asignado",
+            )
 
     try:
-        # 2. [Neo4j] Vincular el viaje al recorrido en la red logística
-        if driver_neo4j is not None:
-            vincular_viaje_ruta_neo4j(
-                driver_neo4j,
-                id_viaje=id_viaje,
-                id_ruta=datos["id_ruta"],
-                id_vehiculo=datos["id_vehiculo"],
-                id_conductor=datos["id_conductor"]
+        with driver_neo4j.session() as s:
+            puntos = [
+                r["id"]
+                for r in s.run(
+                    "MATCH (r:Ruta {ruta_id:$ruta,estado:'HABILITADA'})-[i:INCLUYE]->(p:PuntoEntrega) RETURN p.punto_entrega_id AS id ORDER BY i.orden",
+                    ruta=datos["id_ruta"],
+                )
+            ]
+        exigir(
+            len(puntos) >= 2,
+            "La ruta no está habilitada o no tiene un recorrido válido",
+        )
+        comprobar_maestros()
+        ok, token = reservar_recursos(
+            cliente_redis, datos["id_vehiculo"], datos["id_conductor"]
+        )
+        if not ok:
+            return False, token
+        for codigo in sorted(datos["paquetes"]):
+            clave = f"reserva:paquete:{codigo}"
+            exigir(
+                cliente_redis.set(clave, token, nx=True, ex=300),
+                "Otro coordinador está asignando un paquete",
             )
-            neo4j_vinculado = True
-
-        # 3. [MongoDB] Registrar el viaje en MongoDB
-        registrar_viaje(
-            coleccion_mongo,
+            locks.append(clave)
+        # Revalidar después de obtener todas las reservas; la lista inicial puede haber cambiado.
+        comprobar_maestros()
+        db.operaciones.insert_one(
+            dict(
+                _id=token,
+                tipo="PLANIFICACION",
+                viaje_id=viaje,
+                estado="PROCESANDO",
+                fecha_inicio=datetime.now(timezone.utc),
+                pasos=[],
+            )
+        )
+        if inyector:
+            inyector.verificar("CU01_NEO4J")
+        vincular_viaje_ruta_neo4j(
+            driver_neo4j,
+            viaje,
+            datos["id_ruta"],
+            datos["id_vehiculo"],
+            datos["id_conductor"],
+        )
+        db.operaciones.update_one({"_id": token}, {"$push": {"pasos": "NEO4J"}})
+        if inyector:
+            inyector.verificar("CU01_MONGO")
+        ahora = datetime.now(timezone.utc)
+        payload = dict(
             datos,
-            id_operacion=token,
-            id_viaje=id_viaje
+            paradas=[
+                dict(orden=i + 1, punto_entrega_id=p, estado="PENDIENTE")
+                for i, p in enumerate(puntos)
+            ],
         )
-        mongo_registrado = True
-
-        # 4. [Redis] Confirmar ambas reservas en Redis (permanente)
-        confirmado_vehiculo = confirmar_recurso(
-            cliente_redis, clave_vehiculo, token
-        )
-
-        confirmado_conductor = confirmar_recurso(
-            cliente_redis, clave_conductor, token
-        )
-
-        if confirmado_vehiculo != 1 or confirmado_conductor != 1:
-            raise RuntimeError(
-                "No se pudieron confirmar ambas reservas en Redis"
+        registrar_viaje(coleccion_mongo, payload, id_operacion=token, id_viaje=viaje)
+        for i, codigo in enumerate(datos["paquetes"]):
+            paquete = db.paquetes.find_one({"_id": codigo})
+            db.asignaciones.insert_one(
+                dict(
+                    _id=f"ASIG-{viaje}-{i}",
+                    viaje_id=viaje,
+                    paquete_codigo=codigo,
+                    punto_inicio_id=puntos[0],
+                    punto_fin_id=paquete["punto_entrega_id"],
+                    estado="ACTIVA",
+                    fecha_asignacion=ahora,
+                )
             )
-
-        return True, {
-            "id_viaje": id_viaje,
-            "estado": "PLANIFICADO",
-            "neo4j_vinculado": neo4j_vinculado,
-            "id_operacion": token
-        }
-
+            res = db.paquetes.update_one(
+                {"_id": codigo, "estado": "PENDIENTE"},
+                {"$set": {"estado": "ASIGNADO", "viaje_actual_id": viaje}},
+            )
+            exigir(
+                res.modified_count == 1,
+                "El paquete dejó de estar disponible durante la operación",
+            )
+            if inyector:
+                inyector.verificar("CU01_PAQUETES")
+        for coll, codigo in (
+            (db.vehiculos, datos["id_vehiculo"]),
+            (db.conductores, datos["id_conductor"]),
+        ):
+            exigir(
+                coll.update_one(
+                    {"_id": codigo, "estado": "DISPONIBLE"},
+                    {"$set": {"estado": "RESERVADO", "viaje_actual_id": viaje}},
+                ).modified_count
+                == 1,
+                "El recurso dejó de estar disponible",
+            )
+        db.operaciones.update_one({"_id": token}, {"$push": {"pasos": "MONGODB"}})
+        exigir(
+            confirmar_recurso(
+                cliente_redis, f'reserva:vehiculo:{datos["id_vehiculo"]}', token
+            )
+            == 1,
+            "No se confirmó el vehículo",
+        )
+        if inyector:
+            inyector.verificar("CU01_REDIS_CONFIRM")
+        exigir(
+            confirmar_recurso(
+                cliente_redis, f'reserva:conductor:{datos["id_conductor"]}', token
+            )
+            == 1,
+            "No se confirmó el conductor",
+        )
+        db.operaciones.update_one(
+            {"_id": token},
+            {
+                "$set": {
+                    "estado": "COMPLETADO",
+                    "fecha_fin": datetime.now(timezone.utc),
+                },
+                "$push": {"pasos": "REDIS_CONFIRMACION"},
+            },
+        )
+        return True, dict(
+            id_viaje=viaje,
+            id_operacion=token,
+            estado="PLANIFICADO",
+            neo4j_vinculado=True,
+            asignaciones=len(datos["paquetes"]),
+        )
     except Exception as error:
-        # Compensación en MongoDB si se llegó a registrar
-        if mongo_registrado:
+        errores = []
+        acciones = [
+            lambda: db.asignaciones.delete_many({"viaje_id": viaje}),
+            lambda: db.viajes.delete_one({"_id": viaje}),
+            lambda: db.paquetes.update_many(
+                {"viaje_actual_id": viaje},
+                {"$set": {"estado": "PENDIENTE"}, "$unset": {"viaje_actual_id": ""}},
+            ),
+            lambda: db.vehiculos.update_many(
+                {"viaje_actual_id": viaje},
+                {"$set": {"estado": "DISPONIBLE"}, "$unset": {"viaje_actual_id": ""}},
+            ),
+            lambda: db.conductores.update_many(
+                {"viaje_actual_id": viaje},
+                {"$set": {"estado": "DISPONIBLE"}, "$unset": {"viaje_actual_id": ""}},
+            ),
+            lambda: compensar_viaje_neo4j(driver_neo4j, viaje),
+        ]
+        for accion in acciones:
             try:
-                eliminar_viaje(coleccion_mongo, id_viaje)
-            except Exception:
-                pass
-
-        # Compensación en Neo4j si se llegó a vincular
-        if neo4j_vinculado and driver_neo4j is not None:
+                accion()
+            except Exception as exc:
+                errores.append(type(exc).__name__)
+        if token:
+            for clave in (
+                f'reserva:vehiculo:{datos["id_vehiculo"]}',
+                f'reserva:conductor:{datos["id_conductor"]}',
+            ):
+                try:
+                    liberar_recurso(cliente_redis, clave, token)
+                except Exception as exc:
+                    errores.append(type(exc).__name__)
             try:
-                compensar_viaje_neo4j(driver_neo4j, id_viaje)
-            except Exception:
-                pass
-
-        # Liberar solamente las reservas propias en Redis
-        try:
-            liberar_recurso(cliente_redis, clave_vehiculo, token)
-            liberar_recurso(cliente_redis, clave_conductor, token)
-        except Exception:
-            pass
-
-        return False, f"Operacion compensada: {error}"
+                db.operaciones.update_one(
+                    {"_id": token},
+                    {
+                        "$set": {
+                            "estado": (
+                                "COMPENSACION_PENDIENTE" if errores else "COMPENSADO"
+                            ),
+                            "error": str(error),
+                            "errores_compensacion": errores,
+                        },
+                        "$setOnInsert": {
+                            "tipo": "PLANIFICACION",
+                            "viaje_id": viaje,
+                            "fecha_inicio": datetime.now(timezone.utc),
+                            "pasos": [],
+                        },
+                    },
+                    upsert=True,
+                )
+            except Exception as exc:
+                errores.append(type(exc).__name__)
+        return False, dict(
+            error=str(error),
+            compensado=not errores,
+            errores_compensacion=errores,
+            id_viaje=viaje,
+        )
+    finally:
+        for clave in locks:
+            if token:
+                liberar_recurso(cliente_redis, clave, token)
