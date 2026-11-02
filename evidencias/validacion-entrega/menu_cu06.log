@@ -1,0 +1,256 @@
+{
+  "caso": "CU06",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU06-a8e98807b756",
+    "ruta": "DEMO-CU06-a8e98807b756-RUT-0",
+    "viaje": "DEMO-CU06-a8e98807b756-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-a8e98807b756-VEH-0",
+      "DEMO-CU06-a8e98807b756-VEH-1",
+      "DEMO-CU06-a8e98807b756-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-a8e98807b756-COND-0",
+      "DEMO-CU06-a8e98807b756-COND-1",
+      "DEMO-CU06-a8e98807b756-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-a8e98807b756-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-a8e98807b756-P-0",
+      "DEMO-CU06-a8e98807b756-P-1",
+      "DEMO-CU06-a8e98807b756-P-2",
+      "DEMO-CU06-a8e98807b756-P-3"
+    ],
+    "tramo": "DEMO-CU06-a8e98807b756-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "saga_id": "ENTREGA-541ae0d392b042d2d08db42a69cb0305",
+    "viaje_id": "DEMO-CU06-a8e98807b756-VIA-0",
+    "paquete_codigo": "DEMO-CU06-a8e98807b756-PAQ-0",
+    "receptor": "Receptor de demostración",
+    "id_evento_cassandra": "eec7366f-113d-5616-8b2d-5ded49dab30a",
+    "pasos_completados": [
+      "CU06_REDIS_LOCK",
+      "CU06_CASSANDRA",
+      "CU06_MONGO",
+      "CU06_REDIS_CONFIRM"
+    ]
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU06-a8e98807b756-PAQ-0
+{
+  "caso": "CU06",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU06-7620603a1079",
+    "ruta": "DEMO-CU06-7620603a1079-RUT-0",
+    "viaje": "DEMO-CU06-7620603a1079-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-7620603a1079-VEH-0",
+      "DEMO-CU06-7620603a1079-VEH-1",
+      "DEMO-CU06-7620603a1079-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-7620603a1079-COND-0",
+      "DEMO-CU06-7620603a1079-COND-1",
+      "DEMO-CU06-7620603a1079-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-7620603a1079-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-7620603a1079-P-0",
+      "DEMO-CU06-7620603a1079-P-1",
+      "DEMO-CU06-7620603a1079-P-2",
+      "DEMO-CU06-7620603a1079-P-3"
+    ],
+    "tramo": "DEMO-CU06-7620603a1079-T0-1-0"
+  },
+  "resultado": [
+    {
+      "exito": true,
+      "saga_id": "ENTREGA-15f87c5732e64fb74fc74af32e2fd205",
+      "viaje_id": "DEMO-CU06-7620603a1079-VIA-0",
+      "paquete_codigo": "DEMO-CU06-7620603a1079-PAQ-0",
+      "receptor": "Receptor de demostración",
+      "id_evento_cassandra": "0ecf4f4c-300d-572d-abc4-541e239aa6bb",
+      "pasos_completados": [
+        "CU06_REDIS_LOCK",
+        "CU06_CASSANDRA",
+        "CU06_MONGO",
+        "CU06_REDIS_CONFIRM"
+      ]
+    },
+    {
+      "exito": false,
+      "saga_id": "ENTREGA-15f87c5732e64fb74fc74af32e2fd205",
+      "id_operacion": "ENTREGA-15f87c5732e64fb74fc74af32e2fd205",
+      "estado": "PROCESANDO",
+      "duplicada": true,
+      "error": "Solicitud ya registrada; consultar resultado o ejecutar recuperación"
+    }
+  ],
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU06-7620603a1079-PAQ-0
+{
+  "caso": "CU06",
+  "escenario": "3",
+  "fixture": {
+    "demo_id": "DEMO-CU06-ac2a7a15a071",
+    "ruta": "DEMO-CU06-ac2a7a15a071-RUT-0",
+    "viaje": "DEMO-CU06-ac2a7a15a071-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-ac2a7a15a071-VEH-0",
+      "DEMO-CU06-ac2a7a15a071-VEH-1",
+      "DEMO-CU06-ac2a7a15a071-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-ac2a7a15a071-COND-0",
+      "DEMO-CU06-ac2a7a15a071-COND-1",
+      "DEMO-CU06-ac2a7a15a071-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-ac2a7a15a071-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-ac2a7a15a071-P-0",
+      "DEMO-CU06-ac2a7a15a071-P-1",
+      "DEMO-CU06-ac2a7a15a071-P-2",
+      "DEMO-CU06-ac2a7a15a071-P-3"
+    ],
+    "tramo": "DEMO-CU06-ac2a7a15a071-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-4ad9d6a506e562aa85504c80663309fa",
+    "id_operacion": "ENTREGA-4ad9d6a506e562aa85504c80663309fa",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_CASSANDRA'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU06-ac2a7a15a071-PAQ-0
+{
+  "caso": "CU06",
+  "escenario": "4",
+  "fixture": {
+    "demo_id": "DEMO-CU06-e5588b735309",
+    "ruta": "DEMO-CU06-e5588b735309-RUT-0",
+    "viaje": "DEMO-CU06-e5588b735309-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-e5588b735309-VEH-0",
+      "DEMO-CU06-e5588b735309-VEH-1",
+      "DEMO-CU06-e5588b735309-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-e5588b735309-COND-0",
+      "DEMO-CU06-e5588b735309-COND-1",
+      "DEMO-CU06-e5588b735309-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-e5588b735309-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-e5588b735309-P-0",
+      "DEMO-CU06-e5588b735309-P-1",
+      "DEMO-CU06-e5588b735309-P-2",
+      "DEMO-CU06-e5588b735309-P-3"
+    ],
+    "tramo": "DEMO-CU06-e5588b735309-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-40c074d2c59c0bedba9922258d91749e",
+    "id_operacion": "ENTREGA-40c074d2c59c0bedba9922258d91749e",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_MONGO'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU06-e5588b735309-PAQ-0
+{
+  "caso": "CU06",
+  "escenario": "5",
+  "fixture": {
+    "demo_id": "DEMO-CU06-8f4798d72358",
+    "ruta": "DEMO-CU06-8f4798d72358-RUT-0",
+    "viaje": "DEMO-CU06-8f4798d72358-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-8f4798d72358-VEH-0",
+      "DEMO-CU06-8f4798d72358-VEH-1",
+      "DEMO-CU06-8f4798d72358-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-8f4798d72358-COND-0",
+      "DEMO-CU06-8f4798d72358-COND-1",
+      "DEMO-CU06-8f4798d72358-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-8f4798d72358-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-8f4798d72358-P-0",
+      "DEMO-CU06-8f4798d72358-P-1",
+      "DEMO-CU06-8f4798d72358-P-2",
+      "DEMO-CU06-8f4798d72358-P-3"
+    ],
+    "tramo": "DEMO-CU06-8f4798d72358-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-4b05a9ed7430fc1aabccf0d583baf02a",
+    "id_operacion": "ENTREGA-4b05a9ed7430fc1aabccf0d583baf02a",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_REDIS_CONFIRM'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU06-8f4798d72358-PAQ-0
+[OK] 5 escenarios verificados: CU-06

@@ -1,0 +1,46 @@
+{
+  "caso": "CU05",
+  "escenario": "5",
+  "fixture": {
+    "demo_id": "DEMO-CU05-36e4199dcd25",
+    "ruta": "DEMO-CU05-36e4199dcd25-RUT-0",
+    "viaje": "DEMO-CU05-36e4199dcd25-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-36e4199dcd25-VEH-0",
+      "DEMO-CU05-36e4199dcd25-VEH-1",
+      "DEMO-CU05-36e4199dcd25-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-36e4199dcd25-COND-0",
+      "DEMO-CU05-36e4199dcd25-COND-1",
+      "DEMO-CU05-36e4199dcd25-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-36e4199dcd25-PAQ-0",
+      "DEMO-CU05-36e4199dcd25-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-36e4199dcd25-P-0",
+      "DEMO-CU05-36e4199dcd25-P-1",
+      "DEMO-CU05-36e4199dcd25-P-2",
+      "DEMO-CU05-36e4199dcd25-P-3"
+    ],
+    "tramo": "DEMO-CU05-36e4199dcd25-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-f49d7b74b1866ef03ef3fb4a9f91c27d",
+    "id_operacion": "REASIGNACION-f49d7b74b1866ef03ef3fb4a9f91c27d",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_REDIS_CONFIRM'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}

@@ -1,0 +1,38 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-FINAL05-7fe58fe931af",
+    "ruta": "DEMO-FINAL05-7fe58fe931af-RUT-0",
+    "viaje": "DEMO-FINAL05-7fe58fe931af-VIA-0",
+    "vehiculos": [
+      "DEMO-FINAL05-7fe58fe931af-VEH-0",
+      "DEMO-FINAL05-7fe58fe931af-VEH-1",
+      "DEMO-FINAL05-7fe58fe931af-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-FINAL05-7fe58fe931af-COND-0",
+      "DEMO-FINAL05-7fe58fe931af-COND-1",
+      "DEMO-FINAL05-7fe58fe931af-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-FINAL05-7fe58fe931af-PAQ-0",
+      "DEMO-FINAL05-7fe58fe931af-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-FINAL05-7fe58fe931af-P-0",
+      "DEMO-FINAL05-7fe58fe931af-P-1",
+      "DEMO-FINAL05-7fe58fe931af-P-2",
+      "DEMO-FINAL05-7fe58fe931af-P-3"
+    ],
+    "tramo": "DEMO-FINAL05-7fe58fe931af-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-7996be5d7874705e30b7c2f57afb2003",
+    "id_operacion": "REASIGNACION-7996be5d7874705e30b7c2f57afb2003",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_PAQUETES'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificado": true
+}

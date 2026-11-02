@@ -1,0 +1,28 @@
+{
+  "estado": "PERSISTENCIA_SEED_VERIFICADA",
+  "motores_reales": true,
+  "sha256_datos": "7298caa4a6f4193c826b250688bb5280da9aeb300925f357e5a55a20aa90638f",
+  "mediciones_logicas": 50000,
+  "lectura_motores": {
+    "mongo.contactos": 151,
+    "mongo.usuarios": 1,
+    "mongo.conductores": 100,
+    "mongo.vehiculos": 100,
+    "mongo.puntos_entrega": 50,
+    "mongo.rutas": 25,
+    "mongo.viajes": 500,
+    "mongo.alertas": 500,
+    "mongo.paquetes": 2020,
+    "mongo.asignaciones": 2000,
+    "cassandra.telemetria_por_viaje_dia": 50000,
+    "cassandra.telemetria_por_vehiculo_dia": 50000,
+    "cassandra.alertas_por_viaje_dia": 500,
+    "cassandra.alertas_por_vehiculo_dia": 500,
+    "cassandra.confirmaciones_entrega_por_viaje_dia": 1950,
+    "cassandra.tiempos_tramo_historico": 1350,
+    "cassandra.tiempos_tramo_por_mes": 1350,
+    "neo4j_nodos": 575,
+    "neo4j_relaciones": 850
+  },
+  "redis": "No comparado con snapshot inicial; consultar evidencia de simulación de flota"
+}

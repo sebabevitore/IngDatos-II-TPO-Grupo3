@@ -1,0 +1,291 @@
+[ALERTA LOGÍSTICA] DEMO-CU03-dbd3b8a20f65-VEH-0 | Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)
+{
+  "caso": "CU03",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU03-dbd3b8a20f65",
+    "ruta": "DEMO-CU03-dbd3b8a20f65-RUT-0",
+    "viaje": "DEMO-CU03-dbd3b8a20f65-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-dbd3b8a20f65-VEH-0",
+      "DEMO-CU03-dbd3b8a20f65-VEH-1",
+      "DEMO-CU03-dbd3b8a20f65-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-dbd3b8a20f65-COND-0",
+      "DEMO-CU03-dbd3b8a20f65-COND-1",
+      "DEMO-CU03-dbd3b8a20f65-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-dbd3b8a20f65-PAQ-0",
+      "DEMO-CU03-dbd3b8a20f65-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-dbd3b8a20f65-P-0",
+      "DEMO-CU03-dbd3b8a20f65-P-1",
+      "DEMO-CU03-dbd3b8a20f65-P-2",
+      "DEMO-CU03-dbd3b8a20f65-P-3"
+    ],
+    "tramo": "DEMO-CU03-dbd3b8a20f65-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-CU03-dbd3b8a20f65-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "49847d99f4040a15",
+        "tipo": "EXCESO_VELOCIDAD",
+        "estado": "REGISTRADA_Y_NOTIFICADA",
+        "descripcion": "Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)"
+      }
+    ]
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU03-dbd3b8a20f65-PAQ-0
+[ALERTA LOGÍSTICA] DEMO-CU03-3ab5fbee1518-VEH-0 | Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)
+{
+  "caso": "CU03",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU03-3ab5fbee1518",
+    "ruta": "DEMO-CU03-3ab5fbee1518-RUT-0",
+    "viaje": "DEMO-CU03-3ab5fbee1518-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "DEMO-CU03-3ab5fbee1518-VEH-1",
+      "DEMO-CU03-3ab5fbee1518-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-3ab5fbee1518-COND-0",
+      "DEMO-CU03-3ab5fbee1518-COND-1",
+      "DEMO-CU03-3ab5fbee1518-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-3ab5fbee1518-PAQ-0",
+      "DEMO-CU03-3ab5fbee1518-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-3ab5fbee1518-P-0",
+      "DEMO-CU03-3ab5fbee1518-P-1",
+      "DEMO-CU03-3ab5fbee1518-P-2",
+      "DEMO-CU03-3ab5fbee1518-P-3"
+    ],
+    "tramo": "DEMO-CU03-3ab5fbee1518-T0-1-0"
+  },
+  "resultado": [
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "aedddce0a4e023d3",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "aedddce0a4e023d3",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "aedddce0a4e023d3",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "aedddce0a4e023d3",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    },
+    {
+      "exito": true,
+      "vehiculo_patente": "DEMO-CU03-3ab5fbee1518-VEH-0",
+      "anomalias_detectadas": [
+        {
+          "alerta_id": "aedddce0a4e023d3",
+          "tipo": "EXCESO_VELOCIDAD",
+          "estado": "DEDUPLICADA_SOSTENIDA"
+        }
+      ]
+    }
+  ],
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU03-3ab5fbee1518-PAQ-0
+{
+  "caso": "CU03",
+  "escenario": "3",
+  "fixture": {
+    "demo_id": "DEMO-CU03-60d2d8ec28f5",
+    "ruta": "DEMO-CU03-60d2d8ec28f5-RUT-0",
+    "viaje": "DEMO-CU03-60d2d8ec28f5-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-60d2d8ec28f5-VEH-0",
+      "DEMO-CU03-60d2d8ec28f5-VEH-1",
+      "DEMO-CU03-60d2d8ec28f5-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-60d2d8ec28f5-COND-0",
+      "DEMO-CU03-60d2d8ec28f5-COND-1",
+      "DEMO-CU03-60d2d8ec28f5-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-60d2d8ec28f5-PAQ-0",
+      "DEMO-CU03-60d2d8ec28f5-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-60d2d8ec28f5-P-0",
+      "DEMO-CU03-60d2d8ec28f5-P-1",
+      "DEMO-CU03-60d2d8ec28f5-P-2",
+      "DEMO-CU03-60d2d8ec28f5-P-3"
+    ],
+    "tramo": "DEMO-CU03-60d2d8ec28f5-T0-1-0"
+  },
+  "resultado": {
+    "falla": "CASSANDRA_WRITE",
+    "compensado": true
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU03-60d2d8ec28f5-PAQ-0
+[ALERTA RECUPERADA] DEMO-CU03-5f87406cc93e-VEH-0 | Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)
+{
+  "caso": "CU03",
+  "escenario": "4",
+  "fixture": {
+    "demo_id": "DEMO-CU03-5f87406cc93e",
+    "ruta": "DEMO-CU03-5f87406cc93e-RUT-0",
+    "viaje": "DEMO-CU03-5f87406cc93e-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-5f87406cc93e-VEH-0",
+      "DEMO-CU03-5f87406cc93e-VEH-1",
+      "DEMO-CU03-5f87406cc93e-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-5f87406cc93e-COND-0",
+      "DEMO-CU03-5f87406cc93e-COND-1",
+      "DEMO-CU03-5f87406cc93e-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-5f87406cc93e-PAQ-0",
+      "DEMO-CU03-5f87406cc93e-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-5f87406cc93e-P-0",
+      "DEMO-CU03-5f87406cc93e-P-1",
+      "DEMO-CU03-5f87406cc93e-P-2",
+      "DEMO-CU03-5f87406cc93e-P-3"
+    ],
+    "tramo": "DEMO-CU03-5f87406cc93e-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "total_alertas_abiertas_cassandra": 1,
+    "reconstruidas_en_redis": [],
+    "confirmadas_en_redis": [
+      {
+        "patente": "DEMO-CU03-5f87406cc93e-VEH-0",
+        "tipo": "EXCESO_VELOCIDAD",
+        "alerta_id": "49549bf679bc5160",
+        "motivo": "Promovida de PENDING a ACTIVE en Redis"
+      }
+    ],
+    "huerfanas_limpiadas": []
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU03-5f87406cc93e-PAQ-0
+[ALERTA LOGÍSTICA] DEMO-CU03-95872af988ff-VEH-0 | Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)
+{
+  "caso": "CU03",
+  "escenario": "5",
+  "fixture": {
+    "demo_id": "DEMO-CU03-95872af988ff",
+    "ruta": "DEMO-CU03-95872af988ff-RUT-0",
+    "viaje": "DEMO-CU03-95872af988ff-VIA-0",
+    "vehiculos": [
+      "DEMO-CU03-95872af988ff-VEH-0",
+      "DEMO-CU03-95872af988ff-VEH-1",
+      "DEMO-CU03-95872af988ff-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU03-95872af988ff-COND-0",
+      "DEMO-CU03-95872af988ff-COND-1",
+      "DEMO-CU03-95872af988ff-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU03-95872af988ff-PAQ-0",
+      "DEMO-CU03-95872af988ff-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU03-95872af988ff-P-0",
+      "DEMO-CU03-95872af988ff-P-1",
+      "DEMO-CU03-95872af988ff-P-2",
+      "DEMO-CU03-95872af988ff-P-3"
+    ],
+    "tramo": "DEMO-CU03-95872af988ff-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "total_alertas_abiertas_cassandra": 1,
+    "reconstruidas_en_redis": [
+      {
+        "patente": "DEMO-CU03-95872af988ff-VEH-0",
+        "tipo": "EXCESO_VELOCIDAD",
+        "alerta_id": "8bb0eec2c8b10cc8",
+        "motivo": "Clave ausente en Redis; restaurada desde Cassandra"
+      }
+    ],
+    "confirmadas_en_redis": [],
+    "huerfanas_limpiadas": []
+  },
+  "verificaciones": [
+    "Alerta/compensación contrastada con Cassandra y Redis",
+    "Sin borrado global ni claves de otros vehículos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU03-95872af988ff-PAQ-0
+[OK] 5 escenarios verificados: CU-03

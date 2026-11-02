@@ -137,6 +137,24 @@ def reconciliar_anomalias(patentes=None) -> Dict[str, Any]:
                         }
                     )
 
+        from app.conexiones import conectar_mongodb
+        from app.recuperar_operaciones import recuperar_operaciones
+
+        mongo = conectar_mongodb()
+        try:
+            filtro = {
+                "version": 2,
+                "tipo": {"$in": ["ANOMALIA", "CIERRE_ANOMALIA"]},
+                "estado": "RECONCILIACION_PENDIENTE",
+            }
+            for op in mongo["logistica_flota"].operaciones.find(filtro):
+                patente_op = op.get("alerta", op.get("cierre", {})).get(
+                    "vehiculo_patente"
+                )
+                if patentes is None or patente_op in patentes:
+                    recuperar_operaciones(op["_id"])
+        finally:
+            mongo.close()
         return {
             "exito": True,
             "total_alertas_abiertas_cassandra": len(alertas_abiertas),

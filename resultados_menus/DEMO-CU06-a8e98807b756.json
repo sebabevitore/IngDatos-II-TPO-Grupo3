@@ -1,0 +1,50 @@
+{
+  "caso": "CU06",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU06-a8e98807b756",
+    "ruta": "DEMO-CU06-a8e98807b756-RUT-0",
+    "viaje": "DEMO-CU06-a8e98807b756-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-a8e98807b756-VEH-0",
+      "DEMO-CU06-a8e98807b756-VEH-1",
+      "DEMO-CU06-a8e98807b756-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-a8e98807b756-COND-0",
+      "DEMO-CU06-a8e98807b756-COND-1",
+      "DEMO-CU06-a8e98807b756-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-a8e98807b756-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-a8e98807b756-P-0",
+      "DEMO-CU06-a8e98807b756-P-1",
+      "DEMO-CU06-a8e98807b756-P-2",
+      "DEMO-CU06-a8e98807b756-P-3"
+    ],
+    "tramo": "DEMO-CU06-a8e98807b756-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "saga_id": "ENTREGA-541ae0d392b042d2d08db42a69cb0305",
+    "viaje_id": "DEMO-CU06-a8e98807b756-VIA-0",
+    "paquete_codigo": "DEMO-CU06-a8e98807b756-PAQ-0",
+    "receptor": "Receptor de demostración",
+    "id_evento_cassandra": "eec7366f-113d-5616-8b2d-5ded49dab30a",
+    "pasos_completados": [
+      "CU06_REDIS_LOCK",
+      "CU06_CASSANDRA",
+      "CU06_MONGO",
+      "CU06_REDIS_CONFIRM"
+    ]
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}

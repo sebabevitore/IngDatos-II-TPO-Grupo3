@@ -14,8 +14,7 @@ def obtener_umbral_parada_minutos() -> float:
 
 
 def evaluar_exceso_velocidad(
-    datos: Dict[str, Any],
-    umbral: Optional[float] = None
+    datos: Dict[str, Any], umbral: Optional[float] = None
 ) -> Optional[Dict[str, Any]]:
     """
     Evalúa si la medición de telemetría supera el límite de velocidad.
@@ -41,16 +40,19 @@ def evaluar_exceso_velocidad(
 def evaluar_parada_prolongada(
     datos: Dict[str, Any],
     historial_reciente: List[Dict[str, Any]],
-    umbral_minutos: Optional[float] = None
+    umbral_minutos: Optional[float] = None,
+    parada_programada: bool = False,
 ) -> Optional[Dict[str, Any]]:
     """
     Evalúa si el vehículo lleva detenido un tiempo superior al umbral permitido.
-    
+
     Parámetros:
         datos: La medición de telemetría actual.
         historial_reciente: Lista de mediciones previas del vehículo ordenadas cronológicamente (ASC).
         umbral_minutos: Minutos máximos permitidos antes de considerarlo anomalía.
     """
+    if parada_programada:
+        return None
     if umbral_minutos is None:
         umbral_minutos = obtener_umbral_parada_minutos()
 
@@ -72,11 +74,12 @@ def evaluar_parada_prolongada(
         vel = float(medicion.get("velocidad", 0.0))
         est = str(medicion.get("estado_vehiculo", "")).upper()
 
-        if vel <= 0 or est == "DETENIDO":
+        if vel <= 0 and est != "EN_MOVIMIENTO":
             f_med = datetime.fromisoformat(
                 str(medicion["fecha_hora"]).replace("Z", "+00:00")
             ).astimezone(timezone.utc)
-            inicio_detencion = f_med
+            if f_med <= fecha_actual:
+                inicio_detencion = min(inicio_detencion, f_med)
         else:
             # Hubo movimiento en este punto, acá termina el tramo continuo de detención
             break
@@ -93,8 +96,7 @@ def evaluar_parada_prolongada(
                 f"Parada prolongada sin movimiento durante {duracion_minutos:.1f} min "
                 f"(umbral configurado: {umbral_minutos:.1f} min)"
             ),
-            "inicio_detencion": inicio_detencion.isoformat()
+            "inicio_detencion": inicio_detencion.isoformat(),
         }
 
     return None
-

@@ -1,0 +1,128 @@
+{
+  "caso": "CU07",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU07-4afa39ab9373",
+    "ruta": "DEMO-CU07-4afa39ab9373-RUT-0",
+    "viaje": "DEMO-CU07-4afa39ab9373-VIA-0",
+    "vehiculos": [
+      "DEMO-CU07-4afa39ab9373-VEH-0",
+      "DEMO-CU07-4afa39ab9373-VEH-1",
+      "DEMO-CU07-4afa39ab9373-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU07-4afa39ab9373-COND-0",
+      "DEMO-CU07-4afa39ab9373-COND-1",
+      "DEMO-CU07-4afa39ab9373-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU07-4afa39ab9373-PAQ-0",
+      "DEMO-CU07-4afa39ab9373-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU07-4afa39ab9373-P-0",
+      "DEMO-CU07-4afa39ab9373-P-1",
+      "DEMO-CU07-4afa39ab9373-P-2",
+      "DEMO-CU07-4afa39ab9373-P-3"
+    ],
+    "tramo": "DEMO-CU07-4afa39ab9373-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "punto_bloqueado": "DEMO-CU07-4afa39ab9373-P-1",
+    "impacto": [
+      {
+        "ruta_afectada": "DEMO-CU07-4afa39ab9373-RUT-0",
+        "viajes_afectados": [
+          {
+            "viaje_id": "DEMO-CU07-4afa39ab9373-VIA-0",
+            "en_circulacion": true,
+            "vehiculo_patente": "DEMO-CU07-4afa39ab9373-VEH-0",
+            "latitud": -34.601,
+            "longitud": -58.401,
+            "velocidad_kmh": 40.0,
+            "estado_vehiculo": "EN_MOVIMIENTO"
+          }
+        ]
+      }
+    ],
+    "alternativa": {
+      "recorrido": [
+        "DEMO-CU07-4afa39ab9373-P-0",
+        "DEMO-CU07-4afa39ab9373-P-3",
+        "DEMO-CU07-4afa39ab9373-P-2"
+      ],
+      "tiempo_total": 38,
+      "distancia_total": 11.0
+    }
+  },
+  "verificaciones": [
+    "Red exclusiva para esta demo",
+    "Bloqueo real en la consulta",
+    "Sin sobrescribir estados compartidos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU07-4afa39ab9373-PAQ-0
+{
+  "caso": "CU07",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU07-d392494495b8",
+    "ruta": "DEMO-CU07-d392494495b8-RUT-0",
+    "viaje": "DEMO-CU07-d392494495b8-VIA-0",
+    "vehiculos": [
+      "DEMO-CU07-d392494495b8-VEH-0",
+      "DEMO-CU07-d392494495b8-VEH-1",
+      "DEMO-CU07-d392494495b8-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU07-d392494495b8-COND-0",
+      "DEMO-CU07-d392494495b8-COND-1",
+      "DEMO-CU07-d392494495b8-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU07-d392494495b8-PAQ-0",
+      "DEMO-CU07-d392494495b8-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU07-d392494495b8-P-0",
+      "DEMO-CU07-d392494495b8-P-1",
+      "DEMO-CU07-d392494495b8-P-2",
+      "DEMO-CU07-d392494495b8-P-3"
+    ],
+    "tramo": "DEMO-CU07-d392494495b8-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "punto_bloqueado": "DEMO-CU07-d392494495b8-P-1",
+    "impacto": [
+      {
+        "ruta_afectada": "DEMO-CU07-d392494495b8-RUT-0",
+        "viajes_afectados": [
+          {
+            "viaje_id": "DEMO-CU07-d392494495b8-VIA-0",
+            "en_circulacion": true,
+            "vehiculo_patente": "DEMO-CU07-d392494495b8-VEH-0",
+            "latitud": -34.601,
+            "longitud": -58.401,
+            "velocidad_kmh": 40.0,
+            "estado_vehiculo": "EN_MOVIMIENTO"
+          }
+        ]
+      }
+    ],
+    "alternativa": "No existe ruta alternativa posible."
+  },
+  "verificaciones": [
+    "Red exclusiva para esta demo",
+    "Bloqueo real en la consulta",
+    "Sin sobrescribir estados compartidos"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU07-d392494495b8-PAQ-0
+[OK] 2 escenarios verificados: CU-07
+

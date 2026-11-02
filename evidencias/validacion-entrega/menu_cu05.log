@@ -1,0 +1,322 @@
+{
+  "caso": "CU05",
+  "escenario": "1",
+  "fixture": {
+    "demo_id": "DEMO-CU05-5dbf058deec2",
+    "ruta": "DEMO-CU05-5dbf058deec2-RUT-0",
+    "viaje": "DEMO-CU05-5dbf058deec2-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-5dbf058deec2-VEH-0",
+      "DEMO-CU05-5dbf058deec2-VEH-1",
+      "DEMO-CU05-5dbf058deec2-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-5dbf058deec2-COND-0",
+      "DEMO-CU05-5dbf058deec2-COND-1",
+      "DEMO-CU05-5dbf058deec2-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-5dbf058deec2-PAQ-0",
+      "DEMO-CU05-5dbf058deec2-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-5dbf058deec2-P-0",
+      "DEMO-CU05-5dbf058deec2-P-1",
+      "DEMO-CU05-5dbf058deec2-P-2",
+      "DEMO-CU05-5dbf058deec2-P-3"
+    ],
+    "tramo": "DEMO-CU05-5dbf058deec2-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "saga_id": "REASIGNACION-6a2aac2e3603473f52b2029a5aa887be",
+    "id_viaje_averiado": "DEMO-CU05-5dbf058deec2-VIA-0",
+    "id_viaje_rescate": "VIAJE-RESCATE-a9ebdf7045405da099a056dcab18a879",
+    "patente_averiada": "DEMO-CU05-5dbf058deec2-VEH-0",
+    "patente_reemplazo": "DEMO-CU05-5dbf058deec2-VEH-1",
+    "conductor_reemplazo": "DEMO-CU05-5dbf058deec2-COND-1",
+    "total_paquetes": 2,
+    "paquetes_reasignados": [
+      "DEMO-CU05-5dbf058deec2-PAQ-0",
+      "DEMO-CU05-5dbf058deec2-PAQ-1"
+    ],
+    "pasos_completados": [
+      "CU05_REDIS_RESERVA",
+      "CU05_NEO4J",
+      "CU05_MONGO",
+      "CU05_REDIS_CONFIRM"
+    ]
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-5dbf058deec2-PAQ-0
+{
+  "caso": "CU05",
+  "escenario": "2",
+  "fixture": {
+    "demo_id": "DEMO-CU05-55dd21b70345",
+    "ruta": "DEMO-CU05-55dd21b70345-RUT-0",
+    "viaje": "DEMO-CU05-55dd21b70345-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-55dd21b70345-VEH-0",
+      "DEMO-CU05-55dd21b70345-VEH-1",
+      "DEMO-CU05-55dd21b70345-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-55dd21b70345-COND-0",
+      "DEMO-CU05-55dd21b70345-COND-1",
+      "DEMO-CU05-55dd21b70345-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-55dd21b70345-PAQ-0",
+      "DEMO-CU05-55dd21b70345-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-55dd21b70345-P-0",
+      "DEMO-CU05-55dd21b70345-P-1",
+      "DEMO-CU05-55dd21b70345-P-2",
+      "DEMO-CU05-55dd21b70345-P-3"
+    ],
+    "tramo": "DEMO-CU05-55dd21b70345-T0-1-0"
+  },
+  "resultado": [
+    {
+      "exito": false,
+      "saga_id": "REASIGNACION-9711ce711799b57a93b660228003a5e7",
+      "id_operacion": "REASIGNACION-9711ce711799b57a93b660228003a5e7",
+      "error": "Recurso en operación: conductor:DEMO-CU05-55dd21b70345-COND-1",
+      "compensado": true,
+      "estado": "COMPENSADO",
+      "errores_compensacion": []
+    },
+    {
+      "exito": true,
+      "saga_id": "REASIGNACION-d71ff8cba00fbd727b8d445b26b9418b",
+      "id_viaje_averiado": "DEMO-CU05-OTRO-0b0d2822ca61-VIA-0",
+      "id_viaje_rescate": "VIAJE-RESCATE-8d2091f0b1425171aec972d3ab38dd70",
+      "patente_averiada": "DEMO-CU05-OTRO-0b0d2822ca61-VEH-0",
+      "patente_reemplazo": "DEMO-CU05-55dd21b70345-VEH-1",
+      "conductor_reemplazo": "DEMO-CU05-55dd21b70345-COND-1",
+      "total_paquetes": 2,
+      "paquetes_reasignados": [
+        "DEMO-CU05-OTRO-0b0d2822ca61-PAQ-0",
+        "DEMO-CU05-OTRO-0b0d2822ca61-PAQ-1"
+      ],
+      "pasos_completados": [
+        "CU05_REDIS_RESERVA",
+        "CU05_NEO4J",
+        "CU05_MONGO",
+        "CU05_REDIS_CONFIRM"
+      ]
+    }
+  ],
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-55dd21b70345-PAQ-0
+{
+  "caso": "CU05",
+  "escenario": "3",
+  "fixture": {
+    "demo_id": "DEMO-CU05-63103b1fbb0e",
+    "ruta": "DEMO-CU05-63103b1fbb0e-RUT-0",
+    "viaje": "DEMO-CU05-63103b1fbb0e-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-63103b1fbb0e-VEH-0",
+      "DEMO-CU05-63103b1fbb0e-VEH-1",
+      "DEMO-CU05-63103b1fbb0e-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-63103b1fbb0e-COND-0",
+      "DEMO-CU05-63103b1fbb0e-COND-1",
+      "DEMO-CU05-63103b1fbb0e-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-63103b1fbb0e-PAQ-0",
+      "DEMO-CU05-63103b1fbb0e-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-63103b1fbb0e-P-0",
+      "DEMO-CU05-63103b1fbb0e-P-1",
+      "DEMO-CU05-63103b1fbb0e-P-2",
+      "DEMO-CU05-63103b1fbb0e-P-3"
+    ],
+    "tramo": "DEMO-CU05-63103b1fbb0e-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-3000b9a02de019935dc2608dfb655feb",
+    "id_operacion": "REASIGNACION-3000b9a02de019935dc2608dfb655feb",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_NEO4J'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-63103b1fbb0e-PAQ-0
+{
+  "caso": "CU05",
+  "escenario": "4",
+  "fixture": {
+    "demo_id": "DEMO-CU05-1cf57ba725e6",
+    "ruta": "DEMO-CU05-1cf57ba725e6-RUT-0",
+    "viaje": "DEMO-CU05-1cf57ba725e6-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-1cf57ba725e6-VEH-0",
+      "DEMO-CU05-1cf57ba725e6-VEH-1",
+      "DEMO-CU05-1cf57ba725e6-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-1cf57ba725e6-COND-0",
+      "DEMO-CU05-1cf57ba725e6-COND-1",
+      "DEMO-CU05-1cf57ba725e6-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-1cf57ba725e6-PAQ-0",
+      "DEMO-CU05-1cf57ba725e6-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-1cf57ba725e6-P-0",
+      "DEMO-CU05-1cf57ba725e6-P-1",
+      "DEMO-CU05-1cf57ba725e6-P-2",
+      "DEMO-CU05-1cf57ba725e6-P-3"
+    ],
+    "tramo": "DEMO-CU05-1cf57ba725e6-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-780ec77927a3629cdb24896a5b9a1283",
+    "id_operacion": "REASIGNACION-780ec77927a3629cdb24896a5b9a1283",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_MONGO'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-1cf57ba725e6-PAQ-0
+{
+  "caso": "CU05",
+  "escenario": "5",
+  "fixture": {
+    "demo_id": "DEMO-CU05-36e4199dcd25",
+    "ruta": "DEMO-CU05-36e4199dcd25-RUT-0",
+    "viaje": "DEMO-CU05-36e4199dcd25-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-36e4199dcd25-VEH-0",
+      "DEMO-CU05-36e4199dcd25-VEH-1",
+      "DEMO-CU05-36e4199dcd25-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-36e4199dcd25-COND-0",
+      "DEMO-CU05-36e4199dcd25-COND-1",
+      "DEMO-CU05-36e4199dcd25-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-36e4199dcd25-PAQ-0",
+      "DEMO-CU05-36e4199dcd25-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-36e4199dcd25-P-0",
+      "DEMO-CU05-36e4199dcd25-P-1",
+      "DEMO-CU05-36e4199dcd25-P-2",
+      "DEMO-CU05-36e4199dcd25-P-3"
+    ],
+    "tramo": "DEMO-CU05-36e4199dcd25-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-f49d7b74b1866ef03ef3fb4a9f91c27d",
+    "id_operacion": "REASIGNACION-f49d7b74b1866ef03ef3fb4a9f91c27d",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_REDIS_CONFIRM'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-36e4199dcd25-PAQ-0
+{
+  "caso": "CU05",
+  "escenario": "6",
+  "fixture": {
+    "demo_id": "DEMO-CU05-3a95aac01736",
+    "ruta": "DEMO-CU05-3a95aac01736-RUT-0",
+    "viaje": "DEMO-CU05-3a95aac01736-VIA-0",
+    "vehiculos": [
+      "DEMO-CU05-3a95aac01736-VEH-0",
+      "DEMO-CU05-3a95aac01736-VEH-1",
+      "DEMO-CU05-3a95aac01736-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU05-3a95aac01736-COND-0",
+      "DEMO-CU05-3a95aac01736-COND-1",
+      "DEMO-CU05-3a95aac01736-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU05-3a95aac01736-PAQ-0",
+      "DEMO-CU05-3a95aac01736-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU05-3a95aac01736-P-0",
+      "DEMO-CU05-3a95aac01736-P-1",
+      "DEMO-CU05-3a95aac01736-P-2",
+      "DEMO-CU05-3a95aac01736-P-3"
+    ],
+    "tramo": "DEMO-CU05-3a95aac01736-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "REASIGNACION-edd0a475977ab0a46193ed0886be1b36",
+    "id_operacion": "REASIGNACION-edd0a475977ab0a46193ed0886be1b36",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_PAQUETES'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Paquetes maestros existentes",
+    "Una asignación activa por paquete",
+    "Historia preservada",
+    "Recursos y grafo comprobados"
+  ],
+  "verificado": true
+}
+
+Código para CU-08: DEMO-CU05-3a95aac01736-PAQ-0
+[OK] 6 escenarios verificados: CU-05

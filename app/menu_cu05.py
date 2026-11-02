@@ -35,8 +35,10 @@ def menu():
             ("Rescates concurrentes: un reemplazo, un ganador", demo_concurrencia),
             ("Falla Neo4j y compensación", demo_falla_neo4j_y_rollback),
             ("Falla MongoDB y compensación", demo_falla_mongo_y_rollback),
+            ("Falla Redis final y compensación", lambda: escenarios.cu05(5)),
+            ("Falla en transferencia parcial", lambda: escenarios.cu05(6)),
         ],
-        5,
+        7,
     )
 
 

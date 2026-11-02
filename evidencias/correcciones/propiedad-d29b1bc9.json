@@ -1,0 +1,37 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-LOCK-0127ef177a3b",
+    "ruta": "DEMO-LOCK-0127ef177a3b-RUT-0",
+    "viaje": "DEMO-LOCK-0127ef177a3b-VIA-0",
+    "vehiculos": [
+      "DEMO-LOCK-0127ef177a3b-VEH-0",
+      "DEMO-LOCK-0127ef177a3b-VEH-1",
+      "DEMO-LOCK-0127ef177a3b-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-LOCK-0127ef177a3b-COND-0",
+      "DEMO-LOCK-0127ef177a3b-COND-1",
+      "DEMO-LOCK-0127ef177a3b-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-LOCK-0127ef177a3b-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-LOCK-0127ef177a3b-P-0",
+      "DEMO-LOCK-0127ef177a3b-P-1",
+      "DEMO-LOCK-0127ef177a3b-P-2",
+      "DEMO-LOCK-0127ef177a3b-P-3"
+    ],
+    "tramo": "DEMO-LOCK-0127ef177a3b-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-08db831ed4cd44100b5f85d87c520d08",
+    "id_operacion": "ENTREGA-08db831ed4cd44100b5f85d87c520d08",
+    "error": "Recurso en operación: paquete:DEMO-LOCK-0127ef177a3b-PAQ-0",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificado": true
+}
