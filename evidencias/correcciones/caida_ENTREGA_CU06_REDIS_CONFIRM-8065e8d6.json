@@ -1,0 +1,48 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-CAIDA-3eb43aa68f14",
+    "ruta": "DEMO-CAIDA-3eb43aa68f14-RUT-0",
+    "viaje": "DEMO-CAIDA-3eb43aa68f14-VIA-0",
+    "vehiculos": [
+      "DEMO-CAIDA-3eb43aa68f14-VEH-0",
+      "DEMO-CAIDA-3eb43aa68f14-VEH-1",
+      "DEMO-CAIDA-3eb43aa68f14-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CAIDA-3eb43aa68f14-COND-0",
+      "DEMO-CAIDA-3eb43aa68f14-COND-1",
+      "DEMO-CAIDA-3eb43aa68f14-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CAIDA-3eb43aa68f14-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CAIDA-3eb43aa68f14-P-0",
+      "DEMO-CAIDA-3eb43aa68f14-P-1",
+      "DEMO-CAIDA-3eb43aa68f14-P-2",
+      "DEMO-CAIDA-3eb43aa68f14-P-3"
+    ],
+    "tramo": "DEMO-CAIDA-3eb43aa68f14-T0-1-0"
+  },
+  "operacion": "ENTREGA-b8b4c46b20d479d836d977e1eae8d763",
+  "exit_code": 93,
+  "recuperacion": [
+    {
+      "exito": false,
+      "saga_id": "ENTREGA-b8b4c46b20d479d836d977e1eae8d763",
+      "id_operacion": "ENTREGA-b8b4c46b20d479d836d977e1eae8d763",
+      "error": "Interrupción del ejecutor",
+      "compensado": true,
+      "estado": "COMPENSADO",
+      "errores_compensacion": []
+    }
+  ],
+  "repeticion": [
+    {
+      "id_operacion": "ENTREGA-b8b4c46b20d479d836d977e1eae8d763",
+      "estado": "COMPENSADO",
+      "compensado": true
+    }
+  ],
+  "verificado": true
+}

@@ -2,35 +2,35 @@
   "caso": "CU05",
   "escenario": "6",
   "fixture": {
-    "demo_id": "DEMO-CU05-3a95aac01736",
-    "ruta": "DEMO-CU05-3a95aac01736-RUT-0",
-    "viaje": "DEMO-CU05-3a95aac01736-VIA-0",
+    "demo_id": "DEMO-CU05-5e8489e882cc",
+    "ruta": "DEMO-CU05-5e8489e882cc-RUT-0",
+    "viaje": "DEMO-CU05-5e8489e882cc-VIA-0",
     "vehiculos": [
-      "DEMO-CU05-3a95aac01736-VEH-0",
-      "DEMO-CU05-3a95aac01736-VEH-1",
-      "DEMO-CU05-3a95aac01736-VEH-2"
+      "DEMO-CU05-5e8489e882cc-VEH-0",
+      "DEMO-CU05-5e8489e882cc-VEH-1",
+      "DEMO-CU05-5e8489e882cc-VEH-2"
     ],
     "conductores": [
-      "DEMO-CU05-3a95aac01736-COND-0",
-      "DEMO-CU05-3a95aac01736-COND-1",
-      "DEMO-CU05-3a95aac01736-COND-2"
+      "DEMO-CU05-5e8489e882cc-COND-0",
+      "DEMO-CU05-5e8489e882cc-COND-1",
+      "DEMO-CU05-5e8489e882cc-COND-2"
     ],
     "paquetes": [
-      "DEMO-CU05-3a95aac01736-PAQ-0",
-      "DEMO-CU05-3a95aac01736-PAQ-1"
+      "DEMO-CU05-5e8489e882cc-PAQ-0",
+      "DEMO-CU05-5e8489e882cc-PAQ-1"
     ],
     "puntos": [
-      "DEMO-CU05-3a95aac01736-P-0",
-      "DEMO-CU05-3a95aac01736-P-1",
-      "DEMO-CU05-3a95aac01736-P-2",
-      "DEMO-CU05-3a95aac01736-P-3"
+      "DEMO-CU05-5e8489e882cc-P-0",
+      "DEMO-CU05-5e8489e882cc-P-1",
+      "DEMO-CU05-5e8489e882cc-P-2",
+      "DEMO-CU05-5e8489e882cc-P-3"
     ],
-    "tramo": "DEMO-CU05-3a95aac01736-T0-1-0"
+    "tramo": "DEMO-CU05-5e8489e882cc-T0-1-0"
   },
   "resultado": {
     "exito": false,
-    "saga_id": "REASIGNACION-edd0a475977ab0a46193ed0886be1b36",
-    "id_operacion": "REASIGNACION-edd0a475977ab0a46193ed0886be1b36",
+    "saga_id": "REASIGNACION-5b98efdeb16c564322e2a17483e120ae",
+    "id_operacion": "REASIGNACION-5b98efdeb16c564322e2a17483e120ae",
     "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU05_PAQUETES'",
     "compensado": true,
     "estado": "COMPENSADO",

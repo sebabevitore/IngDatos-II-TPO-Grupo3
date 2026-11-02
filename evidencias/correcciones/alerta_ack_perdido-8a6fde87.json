@@ -1,0 +1,30 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-ALERTA_PARCIAL-2853320c782c",
+    "ruta": "DEMO-ALERTA_PARCIAL-2853320c782c-RUT-0",
+    "viaje": "DEMO-ALERTA_PARCIAL-2853320c782c-VIA-0",
+    "vehiculos": [
+      "DEMO-ALERTA_PARCIAL-2853320c782c-VEH-0",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-VEH-1",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-ALERTA_PARCIAL-2853320c782c-COND-0",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-COND-1",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-ALERTA_PARCIAL-2853320c782c-PAQ-0",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-ALERTA_PARCIAL-2853320c782c-P-0",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-P-1",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-P-2",
+      "DEMO-ALERTA_PARCIAL-2853320c782c-P-3"
+    ],
+    "tramo": "DEMO-ALERTA_PARCIAL-2853320c782c-T0-1-0"
+  },
+  "filas_residuales": 0,
+  "verificado": true
+}

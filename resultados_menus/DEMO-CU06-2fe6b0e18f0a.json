@@ -1,0 +1,45 @@
+{
+  "caso": "CU06",
+  "escenario": "4",
+  "fixture": {
+    "demo_id": "DEMO-CU06-2fe6b0e18f0a",
+    "ruta": "DEMO-CU06-2fe6b0e18f0a-RUT-0",
+    "viaje": "DEMO-CU06-2fe6b0e18f0a-VIA-0",
+    "vehiculos": [
+      "DEMO-CU06-2fe6b0e18f0a-VEH-0",
+      "DEMO-CU06-2fe6b0e18f0a-VEH-1",
+      "DEMO-CU06-2fe6b0e18f0a-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU06-2fe6b0e18f0a-COND-0",
+      "DEMO-CU06-2fe6b0e18f0a-COND-1",
+      "DEMO-CU06-2fe6b0e18f0a-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU06-2fe6b0e18f0a-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-CU06-2fe6b0e18f0a-P-0",
+      "DEMO-CU06-2fe6b0e18f0a-P-1",
+      "DEMO-CU06-2fe6b0e18f0a-P-2",
+      "DEMO-CU06-2fe6b0e18f0a-P-3"
+    ],
+    "tramo": "DEMO-CU06-2fe6b0e18f0a-T0-1-0"
+  },
+  "resultado": {
+    "exito": false,
+    "saga_id": "ENTREGA-f4e4e3b9317ad6efbd641c3e29b76893",
+    "id_operacion": "ENTREGA-f4e4e3b9317ad6efbd641c3e29b76893",
+    "error": "[SIMULACIÓN DE FALLA] Error provocado intencionalmente en el paso: 'CU06_MONGO'",
+    "compensado": true,
+    "estado": "COMPENSADO",
+    "errores_compensacion": []
+  },
+  "verificaciones": [
+    "Viaje y recorrido existentes",
+    "POD y contadores contrastados",
+    "Sin reiniciar el paquete al reintentar",
+    "CU08 disponible"
+  ],
+  "verificado": true
+}

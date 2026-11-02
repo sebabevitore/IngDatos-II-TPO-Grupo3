@@ -1,0 +1,12 @@
+{
+  "estado": "SIMULACION_VERIFICADA",
+  "motores_reales": true,
+  "vehiculos": 50,
+  "mediciones": 250,
+  "eventos_mongodb_completados": 250,
+  "filas_cassandra_por_viaje": 250,
+  "filas_cassandra_por_vehiculo": 250,
+  "estados_redis_verificados": 50,
+  "maximo_cu02_en_curso": 50,
+  "reintentos": 0
+}

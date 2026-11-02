@@ -1,0 +1,47 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-METRICAS-2f43e310986c",
+    "ruta": "DEMO-METRICAS-2f43e310986c-RUT-0",
+    "viaje": "DEMO-METRICAS-2f43e310986c-VIA-0",
+    "vehiculos": [
+      "DEMO-METRICAS-2f43e310986c-VEH-0",
+      "DEMO-METRICAS-2f43e310986c-VEH-1",
+      "DEMO-METRICAS-2f43e310986c-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-METRICAS-2f43e310986c-COND-0",
+      "DEMO-METRICAS-2f43e310986c-COND-1",
+      "DEMO-METRICAS-2f43e310986c-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-METRICAS-2f43e310986c-PAQ-0"
+    ],
+    "puntos": [
+      "DEMO-METRICAS-2f43e310986c-P-0",
+      "DEMO-METRICAS-2f43e310986c-P-1",
+      "DEMO-METRICAS-2f43e310986c-P-2",
+      "DEMO-METRICAS-2f43e310986c-P-3"
+    ],
+    "tramo": "DEMO-METRICAS-2f43e310986c-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "saga_id": "ENTREGA-41f61f7d567ef960a8026e7764fdb3d1",
+    "viaje_id": "DEMO-METRICAS-2f43e310986c-VIA-0",
+    "paquete_codigo": "DEMO-METRICAS-2f43e310986c-PAQ-0",
+    "receptor": "Receptor prueba",
+    "id_evento_cassandra": "7a6fc6d5-faac-501a-b8aa-d2f6929e8bf0",
+    "pasos_completados": [
+      "CU06_REDIS_LOCK",
+      "CU06_CASSANDRA",
+      "CU06_MONGO",
+      "CU06_REDIS_CONFIRM"
+    ]
+  },
+  "metricas": {
+    "entregas_completadas": 1,
+    "entregas_pendientes": 0,
+    "demora_acumulada_min": 10.0
+  },
+  "verificado": true
+}

@@ -1,0 +1,60 @@
+{
+  "caso": "CU01",
+  "escenario": "concurrencia_viaje",
+  "fixture": {
+    "demo_id": "DEMO-CU01-CONC-75a9e18983bb",
+    "ruta": "DEMO-CU01-CONC-75a9e18983bb-RUT-0",
+    "viaje": "d0e12053-8954-5e8f-989e-3b57637a3972",
+    "vehiculos": [
+      "DEMO-CU01-CONC-75a9e18983bb-VEH-0",
+      "DEMO-CU01-CONC-75a9e18983bb-VEH-1",
+      "DEMO-CU01-CONC-75a9e18983bb-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-CU01-CONC-75a9e18983bb-COND-0",
+      "DEMO-CU01-CONC-75a9e18983bb-COND-1",
+      "DEMO-CU01-CONC-75a9e18983bb-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-CU01-CONC-75a9e18983bb-PAQ-0",
+      "DEMO-CU01-CONC-75a9e18983bb-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-CU01-CONC-75a9e18983bb-P-0",
+      "DEMO-CU01-CONC-75a9e18983bb-P-1",
+      "DEMO-CU01-CONC-75a9e18983bb-P-2",
+      "DEMO-CU01-CONC-75a9e18983bb-P-3"
+    ],
+    "tramo": "DEMO-CU01-CONC-75a9e18983bb-T0-1-0"
+  },
+  "resultado": [
+    [
+      false,
+      {
+        "exito": false,
+        "saga_id": "PLANIFICACION-cf3ed9a4228402e590f79e0eee44dcf1",
+        "id_operacion": "PLANIFICACION-cf3ed9a4228402e590f79e0eee44dcf1",
+        "estado": "PROCESANDO",
+        "duplicada": true,
+        "error": "Solicitud ya registrada; consultar resultado o ejecutar recuperación"
+      }
+    ],
+    [
+      true,
+      {
+        "exito": true,
+        "id_viaje": "d0e12053-8954-5e8f-989e-3b57637a3972",
+        "id_operacion": "PLANIFICACION-cf3ed9a4228402e590f79e0eee44dcf1",
+        "estado": "PLANIFICADO",
+        "neo4j_vinculado": true,
+        "asignaciones": 2
+      }
+    ]
+  ],
+  "verificaciones": [
+    "Un ganador",
+    "Sin doble asignación",
+    "Viaje del ganador persistente"
+  ],
+  "verificado": true
+}

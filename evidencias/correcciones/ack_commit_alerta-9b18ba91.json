@@ -1,0 +1,46 @@
+{
+  "fixture": {
+    "demo_id": "DEMO-ACK_ALERTA-769664271975",
+    "ruta": "DEMO-ACK_ALERTA-769664271975-RUT-0",
+    "viaje": "DEMO-ACK_ALERTA-769664271975-VIA-0",
+    "vehiculos": [
+      "DEMO-ACK_ALERTA-769664271975-VEH-0",
+      "DEMO-ACK_ALERTA-769664271975-VEH-1",
+      "DEMO-ACK_ALERTA-769664271975-VEH-2"
+    ],
+    "conductores": [
+      "DEMO-ACK_ALERTA-769664271975-COND-0",
+      "DEMO-ACK_ALERTA-769664271975-COND-1",
+      "DEMO-ACK_ALERTA-769664271975-COND-2"
+    ],
+    "paquetes": [
+      "DEMO-ACK_ALERTA-769664271975-PAQ-0",
+      "DEMO-ACK_ALERTA-769664271975-PAQ-1"
+    ],
+    "puntos": [
+      "DEMO-ACK_ALERTA-769664271975-P-0",
+      "DEMO-ACK_ALERTA-769664271975-P-1",
+      "DEMO-ACK_ALERTA-769664271975-P-2",
+      "DEMO-ACK_ALERTA-769664271975-P-3"
+    ],
+    "tramo": "DEMO-ACK_ALERTA-769664271975-T0-1-0"
+  },
+  "resultado": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-ACK_ALERTA-769664271975-VEH-0",
+    "anomalias_detectadas": [
+      {
+        "alerta_id": "286a09f155eb8fcd",
+        "tipo": "EXCESO_VELOCIDAD",
+        "estado": "REGISTRADA_Y_NOTIFICADA",
+        "descripcion": "Exceso de velocidad: 105.0 km/h (umbral configurado: 90.0 km/h)"
+      }
+    ]
+  },
+  "cierre": {
+    "exito": true,
+    "vehiculo_patente": "DEMO-ACK_ALERTA-769664271975-VEH-0",
+    "anomalias_detectadas": []
+  },
+  "verificado": true
+}
